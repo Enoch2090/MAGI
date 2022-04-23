@@ -37,11 +37,11 @@ def display_results(results):
     for result in results:
         st.markdown(f"🗂  [{result[0]}]({result[1]})")
         st.markdown(f"⭐️  {result[2]} | {result[3]}")
-        st.markdown('''<hr style="height:10px;border:none;color:#333;background-color:#333;" />''', unsafe_allow_html=True)
+        st.markdown('''<hr style="height:2px;border:none;color:#AAA;background-color:#AAA;" />''', unsafe_allow_html=True)
 # ----------------Options----------------
 def option_query(sample):
     st.title("Search for a package")
-    query = st.text_input('Enter query', placeholder=sample)
+    query = st.text_input('Enter query', help='Describe what functionality you are looking for', max_chars=2048)
     st.markdown('Notice: current version of MAGI only supports Python packages. More languages on the way!')
     if st.button("Search"):
         with st.spinner("Querying..."):
