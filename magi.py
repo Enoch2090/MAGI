@@ -40,7 +40,7 @@ def display_results(results):
 # ----------------Options----------------
 def option_query(sample):
     st.title("Search for a package")
-    query = st.text_input('Enter query', sample)
+    query = st.text_input('Enter query', placeholder=sample)
     st.markdown('Notice: current version of MAGI only supports Python packages. More languages on the way!')
     if st.button("Search"):
         with st.spinner("Querying..."):
