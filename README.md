@@ -1,6 +1,6 @@
 # MAGI
 
-![MAGI_title.001](https://raw.githubusercontent.com/Enoch2090/MAGI/main/resources/MAGI_title.001.jpeg)
+<img src="https://raw.githubusercontent.com/Enoch2090/MAGI/main/resources/MAGI_title.001.jpeg" alt="MAGI_title.001" style="zoom: 33%;" />
 
 ## What is MAGI?
 

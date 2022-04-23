@@ -34,6 +34,7 @@ def display_results(results):
 def option_query():
     st.title("Search for a package")
     query = st.text_input('Enter query', 'Extract articles from web pages')
+    st.markdown('Notice: current version of MAGI only supports Python packages. More languages on the way!')
     if st.button("Search"):
         with st.spinner("Querying..."):
             results, retrieve_time = indexer.search(query, rank=10)
