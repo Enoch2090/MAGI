@@ -1,0 +1,9 @@
+beautifulsoup4==4.10.0
+deep_translator==1.7.0
+hn==0.2.2
+langdetect==1.0.9
+Markdown==3.3.6
+PyGithub==1.55
+python_hn==0.0.3
+requests==2.25.1
+tqdm==4.59.0

@@ -1,0 +1,195 @@
+[
+  [
+    "python easy cli interface",
+    [
+      "google/python-fire",
+      "chriskiehl/Gooey",
+      "pallets/click",
+      "tiangolo/typer"
+    ]
+  ],
+  [
+    "web archiving service",
+    [
+      "ArchiveBox/ArchiveBox",
+      "webrecorder/pywb"
+    ]
+  ],
+  [
+    "find the slowest part of a Python program",
+    [
+      "joerick/pyinstrument"
+    ]
+  ],
+  [
+    "proxy pool maintainer",
+    [
+      "jhao104/proxy_pool",
+      "SpiderClub/haipproxy",
+      "Python3WebSpider/ProxyPool"
+    ]
+  ],
+  [
+    "python trading framework",
+    [
+      "ranaroussi/yfinance",
+      "sammchardy/python-binance",
+      "waditu/tushare",
+      "ricequant/rqalpha",
+      "amor71/LiuAlgoTrader",
+      "quantopian/zipline",
+      "jesse-ai/jesse",
+      "tensortrade-org/tensortrade",
+      "edeng23/binance-trade-bot",
+      "QUANTAXIS/QUANTAXIS",
+      "vnpy/vnpy"
+    ]
+  ],
+  [
+    "extract articles from webpages",
+    [
+      "codelucas/newspaper"
+    ]
+  ],
+  [
+    "object detection models",
+    [
+      "facebookresearch/Detectron",
+      "open-mmlab/mmdetection",
+      "PaddlePaddle/PaddleDetection"
+    ]
+  ],
+  [
+    "dataset augmentation toolbox",
+    [
+      "facebookresearch/AugLy",
+      "albumentations-team/albumentations",
+      "aleju/imgaug"
+    ]
+  ],
+  [
+    "numpy machine learning algorithms implementation",
+    [
+      "eriklindernoren/ML-From-Scratch",
+      "ddbourgin/numpy-ml"
+    ]
+  ],
+  [
+    "semantic search framework",
+    [
+      "deepset-ai/haystack",
+      "facebookresearch/DrQA",
+      "jina-ai/jina"
+    ]
+  ],
+  [
+    "natural sorting in Python",
+    [
+      "SethMMorton/natsort"
+    ]
+  ],
+  [
+    "word cloud genereation",
+    [
+      "amueller/word_cloud"
+    ]
+  ],
+  [
+    "terminal formatting tool",
+    [
+      "vinayak-mehta/present",
+      "prompt-toolkit/python-prompt-toolkit",
+      "Textualize/textual",
+      "Textualize/rich"
+    ]
+  ],
+  [
+    "send notifications to mobile phone",
+    [
+      "rbrcsk/pushbullet.py",
+      "dschep/ntfy",
+      "caronc/apprise",
+      "rahiel/telegram-send",
+      "LonamiWebs/Telethon"
+    ]
+  ],
+  [
+    "perform ocr on files",
+    [
+      "madmaze/pytesseract",
+      "JaidedAI/EasyOCR",
+      "PaddlePaddle/PaddleOCR",
+      "ocrmypdf/OCRmyPDF",
+      "Psarpei/Multi-Type-TD-TSR"
+    ]
+  ],
+  [
+    "create gui apps",
+    [
+      "ParthJadhav/Tkinter-Designer",
+      "pyqt/examples",
+      "wxWidgets/Phoenix",
+      "ChrisKnott/Eel"
+    ]
+  ],
+  [
+    "jupyter notebook tools",
+    [
+      "jupyter/jupyter",
+      "jupyterhub/jupyterhub",
+      "mwouts/jupytext",
+      "aws-samples/sagemaker-run-notebook",
+      "nteract/papermill"
+    ]
+  ],
+  [
+    "efficient NLP package",
+    [
+      "nltk/nltk",
+      "explosion/spaCy",
+      "RaRe-Technologies/gensim",
+      "stanfordnlp/stanza",
+      "fighting41love/funNLP",
+      "flairNLP/flair",
+      "sloria/TextBlob",
+      "plasticityai/magnitude"
+    ]
+  ],
+  [
+    "deploy machine learning models",
+    [
+      "streamlit/streamlit",
+      "gradio-app/gradio",
+      "aws/sagemaker-python-sdk",
+      "nline-ml/chantilly"
+    ]
+  ],
+  [
+    "spiders framework",
+    [
+      "NikolaiT/GoogleScraper",
+      "/hhursev/recipe-scrapers",
+      "alirezamika/autoscraper",
+      "tducret/amazon-scraper-python",
+      "bisguzar/twitter-scraper",
+      "realsirjoe/instagram-scraper",
+      "shell909090/siren",
+      "ciscocsirt/malspider",
+      "rmax/scrapy-redis",
+      "Jack-Cherish/python-spider",
+      "ychenracing/Spiders",
+      "wistbean/learn_python3_spider"
+    ]
+  ],
+  [
+    "audio processing",
+    [
+      "librosa/librosa",
+      "pytorch/audio",
+      "worldveil/dejavu",
+      "tyiannak/pyAudioAnalysis",
+      "danilobellini/audiolazy",
+      "fgnt/paderbox",
+    ]
+  ]
+]

@@ -1,0 +1,8 @@
+nltk==3.6.1
+numpy==1.19.0
+PyGithub==1.55
+sentence_transformers==2.2.0
+streamlit==1.0.0
+tqdm==4.59.0
+transformers==4.12.3
+torch==1.11.0+cpu --install-option='-f https://download.pytorch.org/whl/torch_stable.html'
