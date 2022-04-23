@@ -67,10 +67,10 @@ option = st.sidebar.selectbox(
 dataset = CachedDataset('./datafile/ghv6.json', mode='index', chunk_size=1024, max_num=4)
 model = get_model()
 indexer = CachedIndexer(dataset, model)
-samples = get_sample_queries()
+# samples = get_sample_queries()
 
 if option == 'Query':
-    option_query(random.sample(samples, 1)[0])
+    option_query()
 elif option == 'About':
     option_about()
 
