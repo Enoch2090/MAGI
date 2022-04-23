@@ -46,7 +46,7 @@ def option_query():
 def option_about():
     with open('README.md', 'r') as f:
         readme = "".join(f.readlines())
-    st.markdown(readme)
+    st.markdown(readme, unsafe_allow_html=True)
 
 # ----------------Menu----------------
 st.sidebar.title('MAGI: An semantic searcher over GitHub')
