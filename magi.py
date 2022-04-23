@@ -38,9 +38,9 @@ def display_results(results):
         st.markdown(f"🗂  [{result[0]}]({result[1]})")
         st.markdown(f"⭐️  {result[2]} | {result[3]}")
 # ----------------Options----------------
-def option_query():
+def option_query(sample):
     st.title("Search for a package")
-    query = st.text_input('Enter query', random.sample(samples, 1)[0])
+    query = st.text_input('Enter query', sample)
     st.markdown('Notice: current version of MAGI only supports Python packages. More languages on the way!')
     if st.button("Search"):
         with st.spinner("Querying..."):
@@ -67,7 +67,7 @@ indexer = CachedIndexer(dataset, model)
 samples = get_sample_queries()
 
 if option == 'Query':
-    option_query()
+    option_query(random.sample(samples, 1)[0])
 elif option == 'About':
     option_about()
 
