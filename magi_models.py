@@ -16,7 +16,10 @@ class SentenceBertTrainConfig:
 
 def get_distilbert_base_dotprod(model_file=None):
     if model_file is not None:
-        model = SentenceTransformer(model_file)
+        try:
+            model = SentenceTransformer(model_file)
+        except:
+            model = SentenceTransformer('Enoch2090/MAGI')
     else:
         word_emb = models.Transformer('sentence-transformers/msmarco-distilbert-base-dot-prod-v3')
         pooling = models.Pooling(word_emb.get_word_embedding_dimension())
