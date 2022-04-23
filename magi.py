@@ -12,7 +12,6 @@ GH_TOKEN = ''
 st.set_page_config(
    page_title='MAGI',
    page_icon='🗃',
-   layout='wide',
    initial_sidebar_state='expanded',
 )
 
