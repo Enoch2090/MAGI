@@ -8,6 +8,14 @@ from magi_models import *
 from dataset import *
 from indexers import *
 GH_TOKEN = ''
+
+st.set_page_config(
+   page_title='MAGI',
+   page_icon='🗃',
+   layout='wide',
+   initial_sidebar_state='expanded',
+)
+
 # ----------------Functionalities----------------
 def render_html(html):
     st.markdown(f'{html}', unsafe_allow_html=True)
