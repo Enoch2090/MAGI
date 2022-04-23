@@ -37,6 +37,7 @@ def display_results(results):
     for result in results:
         st.markdown(f"🗂  [{result[0]}]({result[1]})")
         st.markdown(f"⭐️  {result[2]} | {result[3]}")
+        st.markdown('''<hr style="height:10px;border:none;color:#333;background-color:#333;" />''', unsafe_allow_html=True)
 # ----------------Options----------------
 def option_query(sample):
     st.title("Search for a package")
@@ -44,6 +45,7 @@ def option_query(sample):
     st.markdown('Notice: current version of MAGI only supports Python packages. More languages on the way!')
     if st.button("Search"):
         with st.spinner("Querying..."):
+            st.markdown(f'Results for "{query}"')
             results, retrieve_time = indexer.search(query, rank=10)
             display_results(results)
             st.markdown(f'Retrieved in {retrieve_time:.4f} seconds with {device} backend')
