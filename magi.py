@@ -38,7 +38,7 @@ def option_query():
         with st.spinner("Querying..."):
             results, retrieve_time = indexer.search(query, rank=10)
             display_results(results)
-            st.markdown(f'Retrieved in {retrieve_time:.4f} seconds')
+            st.markdown(f'Retrieved in {retrieve_time:.4f} seconds with {device} backend')
     return
 
 
