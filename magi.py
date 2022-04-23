@@ -3,6 +3,7 @@ import os
 import sys
 import time
 import json
+import random
 from magi_models import *
 from dataset import *
 from indexers import *
@@ -26,6 +27,12 @@ class CachedIndexer:
 def get_model():
     return get_distilbert_base_dotprod('./datafile/ghv5-model')
 
+@st.experimental_memo
+def get_sample_queries():
+    with open('./datafile/queries.txt', 'r') as f:
+        samples = [x[0].capitalize() for x in json.load(f)]
+    return samples
+
 def display_results(results):
     for result in results:
         st.markdown(f"🗂  [{result[0]}]({result[1]})")
@@ -33,7 +40,7 @@ def display_results(results):
 # ----------------Options----------------
 def option_query():
     st.title("Search for a package")
-    query = st.text_input('Enter query', 'Extract articles from web pages')
+    query = st.text_input('Enter query', random.sample(samples, 1)[0])
     st.markdown('Notice: current version of MAGI only supports Python packages. More languages on the way!')
     if st.button("Search"):
         with st.spinner("Querying..."):
@@ -57,6 +64,8 @@ option = st.sidebar.selectbox(
 dataset = CachedDataset('./datafile/ghv6.json', mode='index', chunk_size=1024, max_num=4)
 model = get_model()
 indexer = CachedIndexer(dataset, model)
+samples = get_sample_queries()
+
 if option == 'Query':
     option_query()
 elif option == 'About':
