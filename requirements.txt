@@ -1,7 +1,7 @@
 numpy==1.19.0
 PyGithub==1.55
 sentence_transformers==2.2.0
-streamlit==1.0.0
+streamlit==1.8.1
 tqdm==4.59.0
 transformers==4.12.3
 --find-links https://download.pytorch.org/whl/cpu
