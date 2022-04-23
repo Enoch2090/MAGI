@@ -8,7 +8,6 @@ from magi_models import *
 from dataset import *
 from indexers import *
 GH_TOKEN = ''
-render_divider = st.markdown('''<hr style="height:2px;border:none;color:#CCC;background-color:#CCC;" />''', unsafe_allow_html=True)
 # ----------------Functionalities----------------
 def render_html(html):
     st.markdown(f'{html}', unsafe_allow_html=True)
@@ -34,11 +33,11 @@ def get_sample_queries():
     return samples
 
 def display_results(results):
-    render_divider
+    st.markdown('''<hr style="height:2px;border:none;color:#CCC;background-color:#CCC;" />''', unsafe_allow_html=True)
     for result in results:
         st.markdown(f"🗂  [{result[0]}]({result[1]})")
         st.markdown(f"⭐️  {result[2]} | {result[3]}")
-        render_divider
+        st.markdown('''<hr style="height:2px;border:none;color:#CCC;background-color:#CCC;" />''', unsafe_allow_html=True)
 # ----------------Options----------------
 def option_query():
     st.title("Search for a package")
