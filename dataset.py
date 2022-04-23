@@ -5,7 +5,6 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 from sentence_transformers import InputExample
-from nltk.corpus import stopwords
 from tqdm.notebook import tqdm
 from transformers import T5Tokenizer, T5ForConditionalGeneration
 from dataclasses import dataclass
@@ -15,13 +14,6 @@ if "JPY_PARENT_PID" in os.environ:
 else:
     from tqdm import tqdm
     
-try:
-    stop_words = set(stopwords.words('english'))
-except:
-    import nltk
-    nltk.download('stopwords')
-finally:
-    stop_words = set(stopwords.words('english'))
    
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -37,9 +29,6 @@ def remove_punkt(text: str) -> str:
 
 def remove_non_ascii(text: str) -> str:
     return ''.join(i for i in text if ord(i)<128)
-
-def remove_stopwords(text_list: list) -> list:
-    return [w for w in text_list if not w.lower() in stop_words]
 
     
 class GitHubCorpusRawTextDataset(Dataset):
