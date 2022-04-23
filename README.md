@@ -14,8 +14,11 @@ To use MAGI, simply type in description of the package you are looking for. The 
 
 ## Deployment
 
+You can find the tuned model at [https://huggingface.co/Enoch2090/MAGI](https://huggingface.co/Enoch2090/MAGI).
+
 Work in progress.
 
 ## Future Plans
 
 Work in progress.
+
