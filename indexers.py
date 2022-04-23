@@ -21,8 +21,11 @@ class SearchScore(int): pass
 GithubQueryResult = Tuple[RepoName, RepoLink, RepoStars, RepoDescription]
 TestCase = Tuple[str, List[RepoName]]
 
-GH_TOKEN = os.getenv('GH_TOKEN') # see https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
-
+try:
+    GH_TOKEN = os.getenv('GH_TOKEN') # see https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
+except:
+    GH_TOKEN = ''
+    
 class MagiIndexer:
     def __init__(self, dataset, model, embedding_file=None) -> Tuple[List[GithubQueryResult], int]:
         self.dataset = dataset

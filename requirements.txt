@@ -5,4 +5,5 @@ sentence_transformers==2.2.0
 streamlit==1.0.0
 tqdm==4.59.0
 transformers==4.12.3
-torch==1.11.0+cpu --install-option='-f https://download.pytorch.org/whl/torch_stable.html'
+--find-links https://download.pytorch.org/whl/cpu
+torch==1.11.0
