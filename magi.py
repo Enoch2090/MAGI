@@ -45,17 +45,27 @@ def display_results(results):
         st.markdown(f"🗂  [{result[0]}]({result[1]})")
         st.markdown(f"⭐️  {result[2]} | {result[3]}")
         st.markdown('''<hr style="height:2px;border:none;color:#CCC;background-color:#CCC;" />''', unsafe_allow_html=True)
+
+def run_query(query):
+    with st.spinner("Querying..."):
+        st.markdown(f'Results for "{query}"')
+        results, retrieve_time = indexer.search(query, rank=10)
+        display_results(results)
+        st.markdown(f'Retrieved in {retrieve_time:.4f} seconds with {device} backend')
 # ----------------Options----------------
-def option_query():
+def option_query(samples):
     st.title("Search for a package")
     query = st.text_input('Enter query', help='Describe what functionality you are looking for', max_chars=2048)
     st.markdown('Notice: current version of MAGI only supports Python packages. More languages on the way!')
-    if st.button("Search"):
-        with st.spinner("Querying..."):
-            st.markdown(f'Results for "{query}"')
-            results, retrieve_time = indexer.search(query, rank=10)
-            display_results(results)
-            st.markdown(f'Retrieved in {retrieve_time:.4f} seconds with {device} backend')
+    col1, col2 = st.columns(2)
+    with col1:
+        search = st.button("Search")
+    with col2:
+        lucky = st.button("Feeling lucky")
+    if search:
+        run_query(query)
+    elif lucky:
+        run_query(random.sample(samples, 1)[0])
     return
 
 
@@ -73,10 +83,10 @@ option = st.sidebar.selectbox(
 dataset = CachedDataset('./datafile/ghv6.json', mode='index', chunk_size=1024, max_num=4)
 model = get_model()
 indexer = CachedIndexer(dataset, model)
-# samples = get_sample_queries()
+samples = get_sample_queries()
 
 if option == 'Query':
-    option_query()
+    option_query(samples)
 elif option == 'About':
     option_about()
 
