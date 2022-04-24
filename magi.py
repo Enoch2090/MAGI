@@ -3,6 +3,7 @@ import os
 import sys
 import time
 import json
+import gc
 import random
 from magi_models import *
 from dataset import *
@@ -66,6 +67,7 @@ def option_query(samples):
         run_query(query)
     elif lucky:
         run_query(random.sample(samples, 1)[0])
+    gc.collect()
     return
 
 
