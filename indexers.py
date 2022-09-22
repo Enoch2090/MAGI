@@ -22,7 +22,8 @@ GithubQueryResult = Tuple[RepoName, RepoLink, RepoStars, RepoDescription]
 TestCase = Tuple[str, List[RepoName]]
 
 try:
-    GH_TOKEN = os.getenv('GH_TOKEN') # see https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
+    GH_TOKEN = os.getenv('GH_TOKEN') 
+    # see https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
 except:
     GH_TOKEN = ''
     
@@ -128,14 +129,19 @@ def compare_searches(baseline_searcher: GitHubSearcher, magi_indexer: MagiIndexe
     print(f'MAGI: mAP@{rank}={model_MAPs.mean()}')
     return baseline_MAPs, model_MAPs
     
-if __name__=='__main__':
-    model = get_distilbert_base_dotprod('./datafile/ghv5-model')
+def benchmark_model(model: str, corpus: str):
+    model = get_distilbert_base_dotprod(model)
     gh = GitHubSearcher(GH_TOKEN)
-    dataset = GitHubCorpusRawTextDataset('./datafile/ghv6.json', mode='index', chunk_size=1024, max_num=4)
+    dataset = GitHubCorpusRawTextDataset(corpus, mode='index', chunk_size=1024, max_num=4)
     mg = MagiIndexer(dataset, model)
-#             baseline_MAPs, model_MAPs = compare_searches(gh, mg, rank=5, get_baseline=False)
-
     baseline_MAPs, model_MAPs = compare_searches(gh, mg, rank=10, get_baseline=False)
     print(mg.search('extract articles from web pages'))
+    print(f'baseline MAP={baseline_MAPs}, model MAP={model_MAPs}')
     with open('msmarco-distilbert-base-dot-prod-v3_trained_embeddings.npy', 'wb') as f:
+        np.save(f, mg.embeddings)
+
+def cache_embeddings(model: str, corpus: str, cache_loc: str):
+    dataset = GitHubCorpusRawTextDataset(corpus, mode='index', chunk_size=1024, max_num=4)
+    mg = MagiIndexer(dataset, model)
+    with open(cache_loc, 'wb') as f:
         np.save(f, mg.embeddings)

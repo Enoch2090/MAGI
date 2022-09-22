@@ -17,7 +17,7 @@ else:
    
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-@dataclass(frozen=True)
+@dataclass
 class FineTuneDataGenerationConfig:
     batch_size: int = 16   # Batch size
     num_queries: int = 8   # Number of queries to generate for every paragraph
@@ -28,7 +28,7 @@ def remove_punkt(text: str) -> str:
     return re.sub(r'[^\w\s]', '', text)
 
 def remove_non_ascii(text: str) -> str:
-    return ''.join(i for i in text if ord(i)<128)
+    return ''.join(i for i in text if ord(i) < 128)
 
     
 class GitHubCorpusRawTextDataset(Dataset):
