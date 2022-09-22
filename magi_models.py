@@ -8,7 +8,7 @@ from pathlib import Path
 from datetime import datetime
 
 from dataset import FineTuneDataGenerationConfig, generate_finetune_data
-from indexers import *
+from indexers import benchmark_model, cache_embeddings
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -91,8 +91,8 @@ def train_from_scratch(
     if cache_embeddings:
         cache_embeddings(
             model=model, 
-            corpus=corpus,
-            cache_loc=f'./datafile/{date_str}.npy'
+        corpus=corpus,
+        cache_loc=f'./datafile/{date_str}.npy'
         )
 
 if __name__ == '__main__':

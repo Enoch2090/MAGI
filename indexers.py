@@ -2,6 +2,7 @@ from magi_models import get_distilbert_base_dotprod
 from dataset import GitHubCorpusRawTextDataset
 from typing import List, Union, Tuple
 from github import Github
+from torch import nn
 from sentence_transformers import util
 import numpy as np
 import time
@@ -129,18 +130,16 @@ def compare_searches(baseline_searcher: GitHubSearcher, magi_indexer: MagiIndexe
     print(f'MAGI: mAP@{rank}={model_MAPs.mean()}')
     return baseline_MAPs, model_MAPs
     
-def benchmark_model(model: str, corpus: str):
-    model = get_distilbert_base_dotprod(model)
+def benchmark_model(model: nn.Module, corpus: str):
+    # model = get_distilbert_base_dotprod(model)
     gh = GitHubSearcher(GH_TOKEN)
     dataset = GitHubCorpusRawTextDataset(corpus, mode='index', chunk_size=1024, max_num=4)
     mg = MagiIndexer(dataset, model)
     baseline_MAPs, model_MAPs = compare_searches(gh, mg, rank=10, get_baseline=False)
     print(mg.search('extract articles from web pages'))
     print(f'baseline MAP={baseline_MAPs}, model MAP={model_MAPs}')
-    with open('msmarco-distilbert-base-dot-prod-v3_trained_embeddings.npy', 'wb') as f:
-        np.save(f, mg.embeddings)
 
-def cache_embeddings(model: str, corpus: str, cache_loc: str):
+def cache_embeddings(model: nn.Module, corpus: str, cache_loc: str):
     dataset = GitHubCorpusRawTextDataset(corpus, mode='index', chunk_size=1024, max_num=4)
     mg = MagiIndexer(dataset, model)
     with open(cache_loc, 'wb') as f:
