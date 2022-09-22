@@ -1,4 +1,3 @@
-from magi_models import get_distilbert_base_dotprod
 from dataset import GitHubCorpusRawTextDataset
 from typing import List, Union, Tuple
 from github import Github
