@@ -1,8 +1,14 @@
-numpy==1.19.0
+beautifulsoup4==4.11.1
+deep_translator==1.9.0
+fire==0.4.0
+hn==0.2.2
+langdetect==1.0.9
+Markdown==3.3.4
+numpy==1.20.1
 PyGithub==1.55
-sentence_transformers==2.2.0
-streamlit==1.8.1
-tqdm==4.59.0
-transformers==4.12.3
---find-links https://download.pytorch.org/whl/cpu
+requests==2.25.1
+sentence_transformers==2.2.2
+streamlit==1.0.0
 torch==1.11.0
+tqdm==4.59.0
+transformers==4.22.1
