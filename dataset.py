@@ -76,15 +76,7 @@ class GitHubCorpusRawTextDataset(Dataset):
                         neg_repo_index = np.random.randint(low=0, high=self.raw_size)
                     neg_sample_index = np.random.randint(low=0, high=self.raw_data[neg_repo_index]['size'])
 
-                if mode == 'triplet':
-                    self.data.append(
-                        (
-                            anchor,
-                            repo['data'][pos_sample_index],
-                            self.raw_data[neg_repo_index]['data'][neg_sample_index]
-                        )
-                    )
-                elif mode == 'pn_train':
+                if mode == 'pn_train':
                     self.data.append(
                         InputExample(
                             texts=[anchor, repo['data'][pos_sample_index]],
@@ -117,15 +109,14 @@ class GitHubCorpusRawTextDataset(Dataset):
         for k, v in self.repo_to_vec.items():
             self.repo_to_vec[k] = np.array(v)
         self.size = len(self.data)
-#         print(f'Successfully built dataset, total {self.size} triplets.')
 
     def __len__(self):
         return self.size
 
-    def __getitem__(self, index):
+    def __getitem__(self, index:int):
         return self.data[index]
     
-    def get_repo(self, index=None, repo_index=None):
+    def get_repo(self, index:int=None, repo_index:int=None):
         if repo_index is None:
             repo_index = self.vec_to_repo[index]
         repo_data = self.raw_data[repo_index]

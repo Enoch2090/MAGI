@@ -1,5 +1,5 @@
 beautifulsoup4==4.11.1
-deep_translator==1.9.0
+deep_translator==1.8.3
 fire==0.4.0
 hn==0.2.2
 langdetect==1.0.9
@@ -9,6 +9,6 @@ PyGithub==1.55
 requests==2.25.1
 sentence_transformers==2.2.2
 streamlit==1.0.0
-torch==1.11.0
 tqdm==4.59.0
-transformers==4.22.1
+transformers==4.21.1
+torch==1.11.0

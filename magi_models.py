@@ -1,6 +1,7 @@
 import random
 import torch
 import fire
+import logging
 from torch import nn
 from sentence_transformers import SentenceTransformer, models, datasets, losses, InputExample
 from dataclasses import dataclass
@@ -34,7 +35,7 @@ def get_distilbert_base_dotprod(model_file=None):
 
 
 def train(model: nn.Module, config: SentenceBertTrainConfig) -> nn.Module:
-    with open('train_loss.log', 'w') as f:
+    with open(Path(config.model_name)/'train_loss.log', 'w') as f:
         def write_score_callback(score, epoch, steps, f=f):
             f.write(f'epoch={epoch:2d}, steps={steps:6d}, score={score:.4f}')
         train_examples = [] 
@@ -45,6 +46,7 @@ def train(model: nn.Module, config: SentenceBertTrainConfig) -> nn.Module:
                     train_examples.append(InputExample(texts=[query, paragraph]))
                 except:
                     pass
+        logging.info(f'Using {len(train_examples)} lines of total train data.')
         random.seed(42)
         random.shuffle(train_examples)
         train_dataloader = datasets.NoDuplicatesDataLoader(train_examples, batch_size=config.batch_size)
@@ -53,9 +55,10 @@ def train(model: nn.Module, config: SentenceBertTrainConfig) -> nn.Module:
         warmup_steps = int(len(train_dataloader) * num_epochs * 0.1)
         model.fit(train_objectives=[(train_dataloader, train_loss)], epochs=num_epochs, warmup_steps=warmup_steps, show_progress_bar=True)
     model.save(config.model_name)
+    logging.info(f'Model saved to {config.model_name}')
     return model
 
-def train_from_scratch(
+def train_from_scratch( 
     corpus: str=None,
     query_data: str=None,
     model_name: str=None,
@@ -65,11 +68,14 @@ def train_from_scratch(
     cache_embeddings: bool=False
 ):
     assert corpus or query_data, 'ERROR: must input one of corpus or query data tsv'
-    date_str = datetime.now().strftime('%y-%m-%d_%h-%M')
-    model_dir = f'./datafile/{date_str}'
+    model_name = datetime.now().strftime('%y-%m-%d_%h-%M')
+    if not model_name:
+        model_name = datetime.now().strftime('%y-%m-%d_%h-%M')
+    model_dir = f'./datafile/{model_name}'
     if corpus:
         # regenerate the query data tsv for training
-        query_data = f'./datafile/{date_str}_queries.tsv'
+        logging.info(f'Using {corpus} to generate queries')
+        query_data = f'./datafile/{model_name}_queries.tsv'
         generate_finetune_data(
             file_dir=corpus,
             output_dir=query_data
@@ -81,18 +87,25 @@ def train_from_scratch(
         model_name=model_dir,
         train_data=query_data
     )
+    
     if not Path(model_dir).exists():
         Path(model_dir).mkdir()
-        
+        logging.info(f'Directory {model_dir} created')
+    
+    logging.info(f'Training using {query_data} with batch_size={batch_size}, num_epochs={num_epochs}')
+    
     model = get_distilbert_base_dotprod()
     train(model, config)
     if benchmark:
+        logging.info(f'Benchmarking on {corpus}')
         benchmark_model(model=model, corpus=corpus)
     if cache_embeddings:
+        cache_loc = f'./datafile/{model_name}.npy'
+        logging.info(f'Caching embeddings to {cache_loc}')
         cache_embeddings(
             model=model, 
         corpus=corpus,
-        cache_loc=f'./datafile/{date_str}.npy'
+        cache_loc=cache_loc
         )
 
 if __name__ == '__main__':
