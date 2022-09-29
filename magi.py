@@ -26,16 +26,16 @@ def render_html(html):
     
 def get_corpus(link):
     local_file_name = link.split('/')[-1]
-        r = requests.get(link, stream=True)
-        file_size = int(r.headers.get('content-length'))
-        with open(local_file_name, "wb") as f:
-            with tqdm(total = file_size // 1024) as _tqdm:
-                chunk_n = 0
-                for chunk in r.iter_content(chunk_size=1024):
-                    if chunk:
-                        f.write(chunk)
-                    chunk_n += 1
-                    _tqdm.update(1)
+    r = requests.get(link, stream=True)
+    file_size = int(r.headers.get('content-length'))
+    with open(local_file_name, "wb") as f:
+        with tqdm(total = file_size // 1024) as _tqdm:
+            chunk_n = 0
+            for chunk in r.iter_content(chunk_size=1024):
+                if chunk:
+                    f.write(chunk)
+                chunk_n += 1
+                _tqdm.update(1)
 
 @st.experimental_singleton
 class CachedDataset(GitHubCorpusRawTextDataset): pass
