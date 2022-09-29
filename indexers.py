@@ -1,5 +1,5 @@
 from dataset import GitHubCorpusRawTextDataset
-from typing import List, Union, Tuple
+from typing import List, Union, Tuple, Dict
 from github import Github
 from torch import nn
 from sentence_transformers import util
@@ -8,12 +8,13 @@ import time
 import json
 import os
 import logging
+import pickle
 
 if "JPY_PARENT_PID" in os.environ:
     from tqdm.notebook import tqdm
 else:
     from tqdm import tqdm
-
+   
 logger = logging.getLogger()
 
 class RepoName(str): pass
@@ -31,32 +32,56 @@ except:
     GH_TOKEN = ''
     
 class MagiIndexer:
-    def __init__(self, dataset, model, embedding_file=None) -> Tuple[List[GithubQueryResult], int]:
-        self.dataset = dataset
+    def __init__(
+        self, 
+        datasets: List[GitHubCorpusRawTextDataset], 
+        model: nn.Module, 
+        embedding_file: str = None
+    ) -> Tuple[List[GithubQueryResult], int]:
+        self.datasets = {d.lang: d for d in datasets}
+        self.langs = [d.lang for d in datasets]
         self.model = model
+        self.embeddings = {}
         if embedding_file is not None:
             with open(embedding_file, 'rb') as f:
-                self.embeddings = np.load(f)
+                self.embeddings = pickle.load(f)
         else:
-            self.embeddings = self.model.encode([x[0] for x in self.dataset])
-        _, d = self.embeddings.shape
-        self.pooled_embeddings = np.zeros(
-            (len(self.dataset.repo_to_vec.keys()), d)
-        )
-        for index, (repo, repo_index) in enumerate(self.dataset.repo_to_vec.items()):
-            repo_pooling = self.embeddings[repo_index].mean(axis=0)
-            self.pooled_embeddings[index, :] = repo_pooling
-        l, d = self.pooled_embeddings.shape
-        print(f'total {l} vectors, d = {d}')
-        self.pooled_embeddings = self.pooled_embeddings.astype(np.float32)
+            for lang in self.langs:
+                self.embeddings[lang] = self.model.encode([x[0] for x in self.datasets[lang]])
+        # All embedding matrices share the same width, so just take the last one for d
+        _, d = self.embeddings[lang].shape
+        self.pooled_embeddings = {
+            lang: np.zeros(
+                (self.datasets[lang].repo_num, d)
+            ) for lang in self.langs
+        }
+        for lang in self.langs:
+            for index, (repo, repo_index) in enumerate(self.datasets[lang].repo_to_vec.items()):
+                repo_pooling = self.embeddings[lang][repo_index].mean(axis=0)
+                self.pooled_embeddings[lang][index, :] = repo_pooling
+            l, d = self.pooled_embeddings[lang].shape
+            print(f'Language {lang}, pooled total {l} vectors, d = {d}')
+            self.pooled_embeddings[lang] = self.pooled_embeddings[lang].astype(np.float32)
     
-    def get_repo(self, index):
-        return self.dataset.get_repo(repo_index=index)
+    def get_repo(
+        self, 
+        index: int, 
+        lang: str
+    ):
+        return self.datasets[lang].get_repo(repo_index=index)
 
-    def search(self, query, rank=10):
+    def search(
+        self, 
+        query: int, 
+        lang: str, 
+        rank=10
+    ):
         start = time.time()
         query_embedding = self.model.encode([query], show_progress_bar=False)
-        similarity = util.dot_score(query_embedding, self.pooled_embeddings).detach().numpy().squeeze(axis=0)
+        similarity = util.dot_score(
+            query_embedding, 
+            self.pooled_embeddings[lang]
+        ).detach().numpy().squeeze(axis=0)
         unsorted_index = np.argpartition(similarity, -rank)[-rank:]
         # unsorted_index = np.argsort(similarity)
         sorted_index = unsorted_index[np.flip(np.argsort(similarity[unsorted_index]))]
@@ -64,7 +89,7 @@ class MagiIndexer:
         for index in sorted_index:
             results.append(
                 tuple(
-                    self.get_repo(index) + [similarity[index]]
+                    self.get_repo(index, lang) + [similarity[index]]
                 )
             )
         end = time.time()
@@ -72,10 +97,19 @@ class MagiIndexer:
         return results, runtime
 
 class GitHubSearcher:
-    def __init__(self, token: str):
+    def __init__(
+        self, 
+        token: str
+    ):
         self.github_client = Github(token)
-    def search(self, query, rank=10) -> Tuple[List[GithubQueryResult], int]:
-        repositories = self.github_client.search_repositories(query=f'{query} stars:>10 language:Python')
+        
+    def search(
+        self, 
+        query, 
+        lang, 
+        rank=10
+    ) -> Tuple[List[GithubQueryResult], int]:
+        repositories = self.github_client.search_repositories(query=f'{query} stars:>10 language:{lang}')
         results = []
         for index, repo in enumerate(repositories):
             if index >= rank:
@@ -92,12 +126,16 @@ class GitHubSearcher:
         results += [('placeholder', '', '', 0)] * max(0, rank - len(results)) 
         return results, 0
 
-def get_testcases(filename) -> List[TestCase]:
+def get_testcases(
+    filename: str
+) -> Dict[str, List[TestCase]]:
     with open(filename, 'r') as f:
         testcases = json.load(f)
     return testcases
 
-def compute_MAP(relevance_sequence: List[int]):
+def compute_MAP(
+    relevance_sequence: List[int]
+) -> float:
     precision_list = list()
     relevance_cnt = 0
     for i in range(len(relevance_sequence)):
@@ -108,73 +146,107 @@ def compute_MAP(relevance_sequence: List[int]):
             precision_list.append(relevance_cnt / (i + 1))
     return sum(precision_list) / len(relevance_sequence)
 
-def compare_searches(baseline_searcher: GitHubSearcher, magi_indexer: MagiIndexer, test_file='./datafile/queries.txt', rank=10, get_baseline=True):
+def compare_searches(
+    baseline_searcher: GitHubSearcher, 
+    magi_indexer: MagiIndexer, 
+    test_file: str = './datafile/queries.txt', 
+    langs: list = ['Python'], 
+    rank: int = 10, 
+    get_baseline: bool = True
+) -> Tuple[List[np.array], List[np.array]]:
     logger.info(f'comparing using {test_file}')
     testcases = get_testcases(test_file)
-    baseline_MAPs = []
-    model_MAPs = []
-    for index, (query, standard_result) in enumerate(testcases):
-        model_results, _ = magi_indexer.search(query, rank=rank)
-        model_relevance = [
-            int(result[0] in standard_result) for result in model_results
-        ]
-        if get_baseline:
-            baseline_results, _ = baseline_searcher.search(query, rank=rank)
-            baseline_relevance = [
-            int(result[0] in standard_result) for result in baseline_results
-        ]
-        else:
-            baseline_relevance = [0] * len(model_relevance)
-        
-        baseline_MAPs.append(compute_MAP(baseline_relevance))
-        model_MAPs.append(compute_MAP(model_relevance))
-    baseline_MAPs = np.array(baseline_MAPs)
-    model_MAPs = np.array(model_MAPs)
-    logger.info(f'Baseline: mAP@{rank}={baseline_MAPs.mean()}')
-    logger.info(f'MAGI: mAP@{rank}={model_MAPs.mean()}')
+    baseline_MAPs = {lang: [] for lang in langs}
+    model_MAPs = {lang: [] for lang in langs}
+    for lang in langs:
+        for index, (query, standard_result) in enumerate(testcases[lang]):
+            model_results, _ = magi_indexer.search(query, lang=lang, rank=rank)
+            model_relevance = [
+                int(result[0] in standard_result) for result in model_results
+            ]
+            if get_baseline:
+                baseline_results, _ = baseline_searcher.search(query, lang=lang, rank=rank)
+                baseline_relevance = [
+                int(result[0] in standard_result) for result in baseline_results
+            ]
+            else:
+                baseline_relevance = [0] * len(model_relevance)
+            baseline_MAPs[lang].append(compute_MAP(baseline_relevance))
+            model_MAPs[lang].append(compute_MAP(model_relevance))
+        baseline_MAPs[lang] = np.array(baseline_MAPs[lang])
+        model_MAPs[lang] = np.array(model_MAPs[lang])
+        logger.info(f'Baseline: language={lang}, mAP@{rank}={baseline_MAPs[lang].mean()}')
+        logger.info(f'MAGI: language={lang}, mAP@{rank}={model_MAPs[lang].mean()}')
     return baseline_MAPs, model_MAPs
     
-def benchmark_model(model: nn.Module, corpus: str, test_file='./datafile/queries.txt'):
-    # model = get_distilbert_base_dotprod(model)
+def benchmark_model(
+    model: nn.Module, 
+    corpus: str, 
+    test_file: str = './datafile/queries.txt',
+    langs: list = ['Python']
+) -> None:
     gh = GitHubSearcher(GH_TOKEN)
-    dataset = GitHubCorpusRawTextDataset(corpus, mode='index', chunk_size=1024, max_num=4)
-    mg = MagiIndexer(dataset, model)
+    datasets = [
+        GitHubCorpusRawTextDataset(corpus, lang=lang, chunk_size=1024, max_num=4) for lang in langs
+    ]
+    mg = MagiIndexer(datasets, model)
     baseline_MAPs, model_MAPs = compare_searches(gh, mg, rank=10, get_baseline=False, test_file=test_file)
     logger.info(f"{mg.search('extract articles from web pages')}")
-    logger.info(f'baseline MAP={baseline_MAPs}, \nmodel MAP={model_MAPs}')
+    logger.info(f'baseline MAP={json.dumps(baseline_MAPs, indent=2)}, \nmodel MAP={json.dumps(model_MAPs, indent=2)}')
 
-def cache_embeddings(model: nn.Module, corpus: str, cache_loc: str):
-    dataset = GitHubCorpusRawTextDataset(corpus, mode='index', chunk_size=1024, max_num=4)
-    mg = MagiIndexer(dataset, model)
+def cache_embeddings(
+    model: nn.Module, 
+    corpus: str, 
+    cache_loc: str, 
+    langs: list = ['Python']
+) -> None:
+    datasets = [
+        GitHubCorpusRawTextDataset(corpus, lang=lang, chunk_size=1024, max_num=4) for lang in langs
+    ]
+    mg = MagiIndexer(datasets, model)
     with open(cache_loc, 'wb') as f:
-        np.save(f, mg.embeddings)
+        pickle.dump(mg.embeddings, f)
         
-def inspect_model(model: nn.Module, corpus: str, test_file='./datafile/queries.txt'):
-    dataset = GitHubCorpusRawTextDataset(corpus, mode='index', chunk_size=1024, max_num=4)
-    mg = MagiIndexer(dataset, model)
+def inspect_model(
+    model: nn.Module, 
+    corpus: str, 
+    test_file: str = './datafile/queries.txt',
+    langs: list = ['Python']
+):
+    datasets = [
+        GitHubCorpusRawTextDataset(corpus, lang=lang, chunk_size=1024, max_num=4) for lang in langs
+    ]
+    mg = MagiIndexer(datasets, model)
     try:
         testcases = get_testcases(test_file)
     except:
-        testcases = []
+        testcases = {}
     print(f'{len(testcases)} cases in total.')
     while True:
-        query = input('Enter command, inspection case ID or custom query:\n')
+        query = input('Enter command, inspection case ID or custom query [$LANG?$QUERY]:\n')
         if query == 'q' or query == 'quit':
             print('Quit inspection.')
             break
         elif query == 's' or query == 'show':
-            for index, (query, _) in enumerate(testcases):
-                print(f'{index}. {query}')
+            for lang in testcases.keys():
+                for index, (query, _) in enumerate(testcases[lang]):
+                    print(f'${lang} {index}. {query}')
         else:
             try:
-                query, standard_result = testcases[int(query)]
+                lang, query = query.split('?')
+            except:
+                continue
+            try:
+                query, standard_result = testcases[lang][int(query)]
             except ValueError:
+                pass
+            except KeyError:
                 pass
             except IndexError:
                 print('Index out of bound.')
                 continue
             finally:
-                model_results, _ = mg.search(query, rank=10)
-                print(f'-----------------------------------\n💡  Results for "{query}"')
+                model_results, _ = mg.search(query, lang=lang, rank=10)
+                print(f'-----------------------------------\n💡  Results for "{query}" in {lang}')
                 for (name, link, star, summary, score) in model_results:
                     print(f'➡️  {name}\n\t✏️  {summary}\n\t⭐  {star}\n\t🏅  score={score:.4f}')

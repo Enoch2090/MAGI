@@ -4,18 +4,20 @@ import os
 import numpy as np
 import torch
 import logging
-from torch.utils.data import Dataset
-from sentence_transformers import InputExample
 from tqdm.notebook import tqdm
-from transformers import T5Tokenizer, T5ForConditionalGeneration
 from dataclasses import dataclass
+from abc import ABC
 
 if "JPY_PARENT_PID" in os.environ:
     from tqdm.notebook import tqdm
 else:
     from tqdm import tqdm
     
-   
+try:
+    from torch.utils.data import Dataset
+except ModuleNotFoundError:
+    class Dataset(ABC): pass
+ 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 @dataclass
@@ -33,7 +35,14 @@ def remove_non_ascii(text: str) -> str:
 
     
 class GitHubCorpusRawTextDataset(Dataset):
-    def __init__(self, file_dir: str, keys_used: list = ['hn_comments', 'readme'], chunk_size:int = 512, max_num:int = 10, mode='pn'):
+    def __init__(
+        self, 
+        file_dir: str, 
+        keys_used: list = ['hn_comments', 'readme'], 
+        lang: str = None, 
+        chunk_size:int = 512, 
+        max_num:int = 10
+    ):
         '''
         Arguments:
             - file_dir (str): File name of a .json file corpus.
@@ -44,7 +53,13 @@ class GitHubCorpusRawTextDataset(Dataset):
         self.raw_data = []
         self.data = []
         self.chunk_size = chunk_size
+        if lang:
+            self.lang = lang
         for repo in raw_data:
+            if lang and repo['lang'] != lang:
+                # if language parameter is used during initialization,
+                # initialize this dataset object as
+                continue
             cleaned_corpus = ''
             for key in keys_used:
                 cleaned_corpus += remove_non_ascii(repo[key])
@@ -67,49 +82,19 @@ class GitHubCorpusRawTextDataset(Dataset):
             for anchor_index, anchor in enumerate(repo['data']):
                 if max_num > 0 and anchor_index >=max_num:
                         break # only store the first $max_num vectors
-                if not mode == 'index':
-                    pos_sample_index = anchor_index
-                    neg_sample_index = 0
-                    neg_repo_index = repo_index
-                    while pos_sample_index == anchor_index:
-                        pos_sample_index = np.random.randint(low=0, high=repo['size'])
-                    while neg_repo_index == repo_index:
-                        neg_repo_index = np.random.randint(low=0, high=self.raw_size)
-                    neg_sample_index = np.random.randint(low=0, high=self.raw_data[neg_repo_index]['size'])
-
-                if mode == 'pn_train':
-                    self.data.append(
-                        InputExample(
-                            texts=[anchor, repo['data'][pos_sample_index]],
-                            label=0.9
-                        )
-                    )
-                    self.data.append(
-                        InputExample(
-                            texts=[anchor, self.raw_data[neg_repo_index]['data'][neg_sample_index]],
-                            label=0.1
-                        )
-                    )
-                elif mode == 'pn_dev':
-                    self.data.append(
-                        (anchor, repo['data'][pos_sample_index], 0.9)
-                    )
-                    self.data.append(
-                        (anchor, self.raw_data[neg_repo_index]['data'][neg_sample_index], 0.1)
-                    )
-                elif mode == 'index':
-                    self.data.append(
-                        (anchor, anchor_index, repo_index)
-                    )
-                    self.vec_to_repo.append(repo_index)
-                    try:
-                        self.repo_to_vec[repo['name']].append(data_index)
-                    except:
-                        self.repo_to_vec[repo['name']] = [data_index]
-                    data_index += 1
+                self.data.append(
+                    (anchor, anchor_index, repo_index)
+                )
+                self.vec_to_repo.append(repo_index)
+                try:
+                    self.repo_to_vec[repo['name']].append(data_index)
+                except:
+                    self.repo_to_vec[repo['name']] = [data_index]
+                data_index += 1
         for k, v in self.repo_to_vec.items():
             self.repo_to_vec[k] = np.array(v)
         self.size = len(self.data)
+        self.repo_num = len(self.repo_to_vec.keys())
 
     def __len__(self) -> int:
         return self.size
@@ -144,6 +129,10 @@ class GitHubCorpusRawTextDataset(Dataset):
             return None
 
 def generate_finetune_data(file_dir: str='./datafile/ghv6.json', output_dir: str='generated_queries_all_ghv6.tsv'):
+    from sentence_transformers import InputExample
+    from transformers import T5Tokenizer, T5ForConditionalGeneration
+    # Decouple the transformers and PyTorch dependency
+    # This allows access to the GitHubCorpusRawTextDataset object without installing PyTorch dependency
     ft_conf = FineTuneDataGenerationConfig()
     ft_dataset = GitHubCorpusRawTextDataset(file_dir, mode='index', chunk_size=512, max_num=50)
     ft_paragraphs = [x[0] for x in ft_dataset]

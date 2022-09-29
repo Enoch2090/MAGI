@@ -62,17 +62,18 @@ def train_model(model: nn.Module, config: SentenceBertTrainConfig) -> nn.Module:
     return model
 
 def entry( 
-    train: bool=True,
-    corpus: str=None,
-    query_data: str=None,
-    model_name: str=None,
-    batch_size: int=16,
-    num_epochs: int=3,
-    benchmark: bool=True,
-    benchmark_file: str=None,
-    inspection: bool=True,
-    cache_embeddings: bool=False,
-    load_from: str=None
+    train: bool = True,
+    corpus: str = None,
+    langs: list = ['Python', 'JavaScript'],
+    query_data: str = None,
+    model_name: str = None,
+    batch_size: int = 16,
+    num_epochs: int = 3,
+    benchmark: bool = True,
+    benchmark_file: str = None,
+    inspection: bool = True,
+    cache_embeddings: bool = False,
+    load_from: str = None
 ):
     if train:
         assert corpus or query_data, 'ERROR: must input one of corpus or query data tsv'
@@ -112,17 +113,28 @@ def entry(
         
     if benchmark:
         logger.info(f'Benchmarking on {corpus}')
-        benchmark_model(model=model, corpus=corpus, test_file=benchmark_file)
+        benchmark_model(
+            model=model, 
+            corpus=corpus, 
+            langs=langs, 
+            test_file=benchmark_file
+        )
     if inspection:
         logger.info(f'Inspection on {corpus}')
-        inspect_model(model=model, corpus=corpus, test_file=benchmark_file)
+        inspect_model(
+            model=model, 
+            corpus=corpus, 
+            langs=langs, 
+            test_file=benchmark_file
+        )
     if cache_embeddings:
-        cache_loc = f'./datafile/{model_name}.npy'
+        cache_loc = f'./datafile/{model_name}.pkl'
         logger.info(f'Caching embeddings to {cache_loc}')
         cache_embeddings(
             model=model, 
-        corpus=corpus,
-        cache_loc=cache_loc
+            corpus=corpus,
+            langs=langs, 
+            cache_loc=cache_loc
         )
 
 if __name__ == '__main__':
