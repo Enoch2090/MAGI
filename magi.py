@@ -5,13 +5,17 @@ import time
 import json
 import gc
 import random
+import logging
 import requests
 from tqdm import tqdm, trange
 from magi_models import *
 from dataset import *
 from indexers import *
-GH_TOKEN = ''
+logging.basicConfig()
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
+GH_TOKEN = ''
 LANGS = ['Python', 'JavaScript']
 
 st.set_page_config(
@@ -25,9 +29,11 @@ def render_html(html):
     st.markdown(f'{html}', unsafe_allow_html=True)
     
 def get_corpus(link):
-    local_file_name = link.split('/')[-1]
+    local_file_name = link.split('/')[-1]    
     r = requests.get(link, stream=True)
     file_size = int(r.headers.get('content-length'))
+    logger.info(f'Downloading {link} as {local_file_name}')
+    logger.info(f'Detected file size {file_size} kb.')
     with open(local_file_name, "wb") as f:
         with tqdm(total = file_size // 1024) as _tqdm:
             chunk_n = 0
@@ -108,7 +114,7 @@ option = st.sidebar.selectbox(
             ['Query', 'About']
         )
 if not os.path.exists('ghv7_transformed.json'):
-    get_corpus('https://huggingface.co/datasets/Enoch2090/github_semantic_search/raw/main/ghv7_transformed.json')
+    get_corpus('https://huggingface.co/datasets/Enoch2090/github_semantic_search/resolve/main/ghv7_transformed.json')
 datasets = [
     CachedDataset('./ghv7_transformed.json', lang=lang, chunk_size=1024, max_num=4) for lang in LANGS
 ]
