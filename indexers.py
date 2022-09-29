@@ -45,6 +45,8 @@ class MagiIndexer:
         if embedding_file is not None:
             with open(embedding_file, 'rb') as f:
                 self.embeddings = pickle.load(f)
+            logger.info(f'Loaded embeddings from {embedding_file}')
+            lang = self.langs[-1]
         else:
             for lang in self.langs:
                 self.embeddings[lang] = self.model.encode([x[0] for x in self.datasets[lang]])
@@ -173,25 +175,25 @@ def compare_searches(
                 baseline_relevance = [0] * len(model_relevance)
             baseline_MAPs[lang].append(compute_MAP(baseline_relevance))
             model_MAPs[lang].append(compute_MAP(model_relevance))
-        baseline_MAPs[lang] = np.array(baseline_MAPs[lang])
-        model_MAPs[lang] = np.array(model_MAPs[lang])
-        logger.info(f'Baseline: language={lang}, mAP@{rank}={baseline_MAPs[lang].mean()}')
-        logger.info(f'MAGI: language={lang}, mAP@{rank}={model_MAPs[lang].mean()}')
+        baseline_MAPs[lang] = baseline_MAPs[lang]
+        model_MAPs[lang] = model_MAPs[lang]
+        logger.info(f'Baseline: language={lang}, mAP@{rank}={sum(baseline_MAPs[lang]) / len(baseline_MAPs[lang])}')
+        logger.info(f'MAGI: language={lang}, mAP@{rank}={sum(model_MAPs[lang]) / len(model_MAPs[lang])}')
     return baseline_MAPs, model_MAPs
     
 def benchmark_model(
     model: nn.Module, 
     corpus: str, 
     test_file: str = './datafile/queries.txt',
+    embedding_file: str = None,
     langs: list = ['Python']
 ) -> None:
     gh = GitHubSearcher(GH_TOKEN)
     datasets = [
         GitHubCorpusRawTextDataset(corpus, lang=lang, chunk_size=1024, max_num=4) for lang in langs
     ]
-    mg = MagiIndexer(datasets, model)
+    mg = MagiIndexer(datasets, model, embedding_file)
     baseline_MAPs, model_MAPs = compare_searches(gh, mg, rank=10, get_baseline=False, test_file=test_file)
-    logger.info(f"{mg.search('extract articles from web pages')}")
     logger.info(f'baseline MAP={json.dumps(baseline_MAPs, indent=2)}, \nmodel MAP={json.dumps(model_MAPs, indent=2)}')
 
 def cache_embeddings(
@@ -206,22 +208,23 @@ def cache_embeddings(
     mg = MagiIndexer(datasets, model)
     with open(cache_loc, 'wb') as f:
         pickle.dump(mg.embeddings, f)
+    logger.info(f'Cached embeddings of {len(datasets)} datasets to {cache_loc}.')
         
 def inspect_model(
     model: nn.Module, 
     corpus: str, 
     test_file: str = './datafile/queries.txt',
+    embedding_file: str = None,
     langs: list = ['Python']
 ):
     datasets = [
         GitHubCorpusRawTextDataset(corpus, lang=lang, chunk_size=1024, max_num=4) for lang in langs
     ]
-    mg = MagiIndexer(datasets, model)
+    mg = MagiIndexer(datasets, model, embedding_file)
     try:
         testcases = get_testcases(test_file)
     except:
         testcases = {}
-    print(f'{len(testcases)} cases in total.')
     while True:
         query = input('Enter command, inspection case ID or custom query [$LANG?$QUERY]:\n')
         if query == 'q' or query == 'quit':

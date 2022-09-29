@@ -69,10 +69,12 @@ def entry(
     model_name: str = None,
     batch_size: int = 16,
     num_epochs: int = 3,
+    embedding_file = None,
     benchmark: bool = True,
     benchmark_file: str = None,
     inspection: bool = True,
-    cache_embeddings: bool = False,
+    cache: bool = False,
+    cache_loc: str = None,
     load_from: str = None
 ):
     if train:
@@ -117,7 +119,8 @@ def entry(
             model=model, 
             corpus=corpus, 
             langs=langs, 
-            test_file=benchmark_file
+            test_file=benchmark_file,
+            embedding_file=embedding_file
         )
     if inspection:
         logger.info(f'Inspection on {corpus}')
@@ -125,10 +128,12 @@ def entry(
             model=model, 
             corpus=corpus, 
             langs=langs, 
-            test_file=benchmark_file
+            test_file=benchmark_file,
+            embedding_file=embedding_file
         )
-    if cache_embeddings:
-        cache_loc = f'./datafile/{model_name}.pkl'
+    if cache:
+        if not cache_loc:
+            cache_loc = f'./datafile/{model_name}.pkl'
         logger.info(f'Caching embeddings to {cache_loc}')
         cache_embeddings(
             model=model, 
