@@ -107,14 +107,15 @@ option = st.sidebar.selectbox(
             'Menu',
             ['Query', 'About']
         )
+if not os.path.exists('ghv7_transformed.json'):
+    get_corpus('https://huggingface.co/datasets/Enoch2090/github_semantic_search/raw/main/ghv7_transformed.json')
 datasets = [
     CachedDataset('./ghv7_transformed.json', lang=lang, chunk_size=1024, max_num=4) for lang in LANGS
 ]
 model = get_model()
 indexer = CachedIndexer(datasets, model)
 samples = get_sample_queries()
-if not os.path.exists('ghv7_transformed.json'):
-    get_corpus('https://huggingface.co/datasets/Enoch2090/github_semantic_search/raw/main/ghv7_transformed.json')
+
 if option == 'Query':
     option_query(samples)
 elif option == 'About':
