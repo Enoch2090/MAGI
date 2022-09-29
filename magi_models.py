@@ -9,9 +9,12 @@ from pathlib import Path
 from datetime import datetime
 
 from dataset import FineTuneDataGenerationConfig, generate_finetune_data
-from indexers import benchmark_model, cache_embeddings
+from indexers import benchmark_model, inspect_model, cache_embeddings
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+logging.basicConfig()
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 @dataclass
 class SentenceBertTrainConfig:
@@ -34,7 +37,7 @@ def get_distilbert_base_dotprod(model_file=None):
 
 
 
-def train(model: nn.Module, config: SentenceBertTrainConfig) -> nn.Module:
+def train_model(model: nn.Module, config: SentenceBertTrainConfig) -> nn.Module:
     with open(Path(config.model_name)/'train_loss.log', 'w') as f:
         def write_score_callback(score, epoch, steps, f=f):
             f.write(f'epoch={epoch:2d}, steps={steps:6d}, score={score:.4f}')
@@ -46,7 +49,7 @@ def train(model: nn.Module, config: SentenceBertTrainConfig) -> nn.Module:
                     train_examples.append(InputExample(texts=[query, paragraph]))
                 except:
                     pass
-        logging.info(f'Using {len(train_examples)} lines of total train data.')
+        logger.info(f'Using {len(train_examples)} lines of total train data.')
         random.seed(42)
         random.shuffle(train_examples)
         train_dataloader = datasets.NoDuplicatesDataLoader(train_examples, batch_size=config.batch_size)
@@ -55,53 +58,67 @@ def train(model: nn.Module, config: SentenceBertTrainConfig) -> nn.Module:
         warmup_steps = int(len(train_dataloader) * num_epochs * 0.1)
         model.fit(train_objectives=[(train_dataloader, train_loss)], epochs=num_epochs, warmup_steps=warmup_steps, show_progress_bar=True)
     model.save(config.model_name)
-    logging.info(f'Model saved to {config.model_name}')
+    logger.info(f'Model saved to {config.model_name}')
     return model
 
-def train_from_scratch( 
+def entry( 
+    train: bool=True,
     corpus: str=None,
     query_data: str=None,
     model_name: str=None,
     batch_size: int=16,
     num_epochs: int=3,
     benchmark: bool=True,
-    cache_embeddings: bool=False
+    benchmark_file: str=None,
+    inspection: bool=True,
+    cache_embeddings: bool=False,
+    load_from: str=None
 ):
-    assert corpus or query_data, 'ERROR: must input one of corpus or query data tsv'
-    model_name = datetime.now().strftime('%y-%m-%d_%h-%M')
-    if not model_name:
+    if train:
+        assert corpus or query_data, 'ERROR: must input one of corpus or query data tsv'
         model_name = datetime.now().strftime('%y-%m-%d_%h-%M')
-    model_dir = f'./datafile/{model_name}'
-    if corpus:
-        # regenerate the query data tsv for training
-        logging.info(f'Using {corpus} to generate queries')
-        query_data = f'./datafile/{model_name}_queries.tsv'
-        generate_finetune_data(
-            file_dir=corpus,
-            output_dir=query_data
+        if not model_name:
+            model_name = datetime.now().strftime('%y-%m-%d_%h-%M')
+        model_dir = f'./datafile/{model_name}'
+        if corpus:
+            # regenerate the query data tsv for training
+            logger.info(f'Using {corpus} to generate queries')
+            query_data = f'./datafile/{model_name}_queries.tsv'
+            generate_finetune_data(
+                file_dir=corpus,
+                output_dir=query_data
+            )
+
+        config = SentenceBertTrainConfig(
+            batch_size=batch_size,
+            num_epochs=num_epochs,
+            model_name=model_dir,
+            train_data=query_data
         )
+
+        if not Path(model_dir).exists():
+            Path(model_dir).mkdir()
+            logger.info(f'Directory {model_dir} created')
+
+        logger.info(f'Training using {query_data} with batch_size={batch_size}, num_epochs={num_epochs}')
+
+        model = get_distilbert_base_dotprod()
+        train_model(model, config)
+    else:
+        if load_from:
+            model = get_distilbert_base_dotprod(load_from)
+        else:
+            model = get_distilbert_base_dotprod('Enoch2090/MAGI')
         
-    config = SentenceBertTrainConfig(
-        batch_size=batch_size,
-        num_epochs=num_epochs,
-        model_name=model_dir,
-        train_data=query_data
-    )
-    
-    if not Path(model_dir).exists():
-        Path(model_dir).mkdir()
-        logging.info(f'Directory {model_dir} created')
-    
-    logging.info(f'Training using {query_data} with batch_size={batch_size}, num_epochs={num_epochs}')
-    
-    model = get_distilbert_base_dotprod()
-    train(model, config)
     if benchmark:
-        logging.info(f'Benchmarking on {corpus}')
-        benchmark_model(model=model, corpus=corpus)
+        logger.info(f'Benchmarking on {corpus}')
+        benchmark_model(model=model, corpus=corpus, test_file=benchmark_file)
+    if inspection:
+        logger.info(f'Inspection on {corpus}')
+        inspect_model(model=model, corpus=corpus, test_file=benchmark_file)
     if cache_embeddings:
         cache_loc = f'./datafile/{model_name}.npy'
-        logging.info(f'Caching embeddings to {cache_loc}')
+        logger.info(f'Caching embeddings to {cache_loc}')
         cache_embeddings(
             model=model, 
         corpus=corpus,
@@ -109,4 +126,4 @@ def train_from_scratch(
         )
 
 if __name__ == '__main__':
-    fire.Fire(train_from_scratch)
+    fire.Fire(entry)

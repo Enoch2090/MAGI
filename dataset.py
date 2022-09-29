@@ -3,6 +3,7 @@ import re
 import os
 import numpy as np
 import torch
+import logging
 from torch.utils.data import Dataset
 from sentence_transformers import InputExample
 from tqdm.notebook import tqdm
@@ -110,7 +111,7 @@ class GitHubCorpusRawTextDataset(Dataset):
             self.repo_to_vec[k] = np.array(v)
         self.size = len(self.data)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return self.size
 
     def __getitem__(self, index:int):
@@ -127,13 +128,20 @@ class GitHubCorpusRawTextDataset(Dataset):
             repo_data['description']
         ]
     
-    def get_tags(self, index=None, repo_index=None):
+    def get_tags(self, index:int=None, repo_index:int=None):
         if repo_index is None:
             repo_index = self.vec_to_repo[index]
         repo_data = self.raw_data[repo_index]
         return [
             repo_data['tags']
         ]
+    
+    def find_repo(self, repo_name: str) -> int:
+        try:
+            return self.repo_to_vec[repo_name]
+        except KeyError:
+            print(f'Repository {repo_name} not found')
+            return None
 
 def generate_finetune_data(file_dir: str='./datafile/ghv6.json', output_dir: str='generated_queries_all_ghv6.tsv'):
     ft_conf = FineTuneDataGenerationConfig()

@@ -7,11 +7,14 @@ import numpy as np
 import time
 import json
 import os
+import logging
 
 if "JPY_PARENT_PID" in os.environ:
     from tqdm.notebook import tqdm
 else:
     from tqdm import tqdm
+
+logger = logging.getLogger()
 
 class RepoName(str): pass
 class RepoDescription(str): pass
@@ -55,6 +58,7 @@ class MagiIndexer:
         query_embedding = self.model.encode([query], show_progress_bar=False)
         similarity = util.dot_score(query_embedding, self.pooled_embeddings).detach().numpy().squeeze(axis=0)
         unsorted_index = np.argpartition(similarity, -rank)[-rank:]
+        # unsorted_index = np.argsort(similarity)
         sorted_index = unsorted_index[np.flip(np.argsort(similarity[unsorted_index]))]
         results = []
         for index in sorted_index:
@@ -105,6 +109,7 @@ def compute_MAP(relevance_sequence: List[int]):
     return sum(precision_list) / len(relevance_sequence)
 
 def compare_searches(baseline_searcher: GitHubSearcher, magi_indexer: MagiIndexer, test_file='./datafile/queries.txt', rank=10, get_baseline=True):
+    logger.info(f'comparing using {test_file}')
     testcases = get_testcases(test_file)
     baseline_MAPs = []
     model_MAPs = []
@@ -125,21 +130,51 @@ def compare_searches(baseline_searcher: GitHubSearcher, magi_indexer: MagiIndexe
         model_MAPs.append(compute_MAP(model_relevance))
     baseline_MAPs = np.array(baseline_MAPs)
     model_MAPs = np.array(model_MAPs)
-    print(f'Baseline: mAP@{rank}={baseline_MAPs.mean()}')
-    print(f'MAGI: mAP@{rank}={model_MAPs.mean()}')
+    logger.info(f'Baseline: mAP@{rank}={baseline_MAPs.mean()}')
+    logger.info(f'MAGI: mAP@{rank}={model_MAPs.mean()}')
     return baseline_MAPs, model_MAPs
     
-def benchmark_model(model: nn.Module, corpus: str):
+def benchmark_model(model: nn.Module, corpus: str, test_file='./datafile/queries.txt'):
     # model = get_distilbert_base_dotprod(model)
     gh = GitHubSearcher(GH_TOKEN)
     dataset = GitHubCorpusRawTextDataset(corpus, mode='index', chunk_size=1024, max_num=4)
     mg = MagiIndexer(dataset, model)
-    baseline_MAPs, model_MAPs = compare_searches(gh, mg, rank=10, get_baseline=False)
-    print(mg.search('extract articles from web pages'))
-    print(f'baseline MAP={baseline_MAPs}, model MAP={model_MAPs}')
+    baseline_MAPs, model_MAPs = compare_searches(gh, mg, rank=10, get_baseline=False, test_file=test_file)
+    logger.info(f"{mg.search('extract articles from web pages')}")
+    logger.info(f'baseline MAP={baseline_MAPs}, \nmodel MAP={model_MAPs}')
 
 def cache_embeddings(model: nn.Module, corpus: str, cache_loc: str):
     dataset = GitHubCorpusRawTextDataset(corpus, mode='index', chunk_size=1024, max_num=4)
     mg = MagiIndexer(dataset, model)
     with open(cache_loc, 'wb') as f:
         np.save(f, mg.embeddings)
+        
+def inspect_model(model: nn.Module, corpus: str, test_file='./datafile/queries.txt'):
+    dataset = GitHubCorpusRawTextDataset(corpus, mode='index', chunk_size=1024, max_num=4)
+    mg = MagiIndexer(dataset, model)
+    try:
+        testcases = get_testcases(test_file)
+    except:
+        testcases = []
+    print(f'{len(testcases)} cases in total.')
+    while True:
+        query = input('Enter command, inspection case ID or custom query:\n')
+        if query == 'q' or query == 'quit':
+            print('Quit inspection.')
+            break
+        elif query == 's' or query == 'show':
+            for index, (query, _) in enumerate(testcases):
+                print(f'{index}. {query}')
+        else:
+            try:
+                query, standard_result = testcases[int(query)]
+            except ValueError:
+                pass
+            except IndexError:
+                print('Index out of bound.')
+                continue
+            finally:
+                model_results, _ = mg.search(query, rank=10)
+                print(f'-----------------------------------\n💡  Results for "{query}"')
+                for (name, link, star, summary, score) in model_results:
+                    print(f'➡️  {name}\n\t✏️  {summary}\n\t⭐  {star}\n\t🏅  score={score:.4f}')
