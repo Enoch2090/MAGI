@@ -8,17 +8,11 @@ Read [**MAGI: MachineLearning Augmented Github Indexer**](https://www.enoch2090.
 
 ## How to use it?
 
-Demo at: [https://share.streamlit.io/enoch2090/magi/main/magi.py](https://share.streamlit.io/enoch2090/magi/main/magi.py). Notice: current version supports Python packages only.
+Demo at: [magi-search.com](https://magi-search.com).
 
 To use MAGI, simply type in description of the package you are looking for. The more detailed your description is, the more accurate the result will be.
 
 ## Deployment
 
 You can find the tuned model at [https://huggingface.co/Enoch2090/MAGI](https://huggingface.co/Enoch2090/MAGI).
-
-Work in progress.
-
-## Future Plans
-
-Work in progress.
-
+Current version of corpus is located at [https://huggingface.co/datasets/Enoch2090/github_semantic_search/raw/main/ghv7_transformed.json](https://huggingface.co/datasets/Enoch2090/github_semantic_search/raw/main/ghv7_transformed.json).

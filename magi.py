@@ -5,6 +5,8 @@ import time
 import json
 import gc
 import random
+import requests
+from tqdm import tqdm, trange
 from magi_models import *
 from dataset import *
 from indexers import *
@@ -21,6 +23,19 @@ st.set_page_config(
 # ----------------Functionalities----------------
 def render_html(html):
     st.markdown(f'{html}', unsafe_allow_html=True)
+    
+def get_corpus(link):
+    local_file_name = link.split('/')[-1]
+        r = requests.get(link, stream=True)
+        file_size = int(r.headers.get('content-length'))
+        with open(local_file_name, "wb") as f:
+            with tqdm(total = file_size // 1024) as _tqdm:
+                chunk_n = 0
+                for chunk in r.iter_content(chunk_size=1024):
+                    if chunk:
+                        f.write(chunk)
+                    chunk_n += 1
+                    _tqdm.update(1)
 
 @st.experimental_singleton
 class CachedDataset(GitHubCorpusRawTextDataset): pass
@@ -93,12 +108,13 @@ option = st.sidebar.selectbox(
             ['Query', 'About']
         )
 datasets = [
-    CachedDataset('./datafile/ghv7_transformed.json', lang=lang, chunk_size=1024, max_num=4) for lang in LANGS
+    CachedDataset('./ghv7_transformed.json', lang=lang, chunk_size=1024, max_num=4) for lang in LANGS
 ]
 model = get_model()
 indexer = CachedIndexer(datasets, model)
 samples = get_sample_queries()
-
+if not os.path.exists('ghv7_transformed.json'):
+    get_corpus('https://huggingface.co/datasets/Enoch2090/github_semantic_search/raw/main/ghv7_transformed.json')
 if option == 'Query':
     option_query(samples)
 elif option == 'About':
