@@ -205,6 +205,7 @@ def cache_embeddings(
     datasets = [
         GitHubCorpusRawTextDataset(corpus, lang=lang, chunk_size=1024, max_num=4) for lang in langs
     ]
+    logger.info(f'Caching languages: {langs}, lens={[len(d) for d in datasets]}')
     mg = MagiIndexer(datasets, model)
     with open(cache_loc, 'wb') as f:
         pickle.dump(mg.embeddings, f)

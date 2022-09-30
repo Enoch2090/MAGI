@@ -16,7 +16,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 GH_TOKEN = ''
-LANGS = ['Python', 'JavaScript']
+LANGS = ['Python', 'JavaScript', 'C++']
 
 st.set_page_config(
    page_title='MAGI',
