@@ -2,7 +2,6 @@ import json
 import re
 import os
 import numpy as np
-import torch
 import logging
 from tqdm.notebook import tqdm
 from dataclasses import dataclass
@@ -14,6 +13,7 @@ else:
     from tqdm import tqdm
     
 try:
+    import torch
     from torch.utils.data import Dataset
 except ModuleNotFoundError:
     class Dataset(ABC): pass
@@ -134,7 +134,7 @@ def generate_finetune_data(file_dir: str='./datafile/ghv6.json', output_dir: str
     # Decouple the transformers and PyTorch dependency
     # This allows access to the GitHubCorpusRawTextDataset object without installing PyTorch dependency
     ft_conf = FineTuneDataGenerationConfig()
-    ft_dataset = GitHubCorpusRawTextDataset(file_dir, mode='index', chunk_size=512, max_num=50)
+    ft_dataset = GitHubCorpusRawTextDataset(file_dir, chunk_size=512, max_num=50)
     ft_paragraphs = [x[0] for x in ft_dataset]
     ft_tokenizer = T5Tokenizer.from_pretrained('BeIR/query-gen-msmarco-t5-large-v1')
     ft_model = T5ForConditionalGeneration.from_pretrained('BeIR/query-gen-msmarco-t5-large-v1')
@@ -153,10 +153,11 @@ def generate_finetune_data(file_dir: str='./datafile/ghv6.json', output_dir: str
             )
             for idx, out in enumerate(outputs):
                 query = ft_tokenizer.decode(out, skip_special_tokens=True)
-                query = remove_non_ascii(query)
+                query = remove_non_ascii(query).replace("\t", " ").strip()
                 para = sub_paragraphs[int(idx/ft_conf.num_queries)]
-                para = remove_non_ascii(para)
-                f.write("{}\t{}\n".format(query.replace("\t", " ").strip(), para.replace("\t", " ").strip()))
+                para = remove_non_ascii(para).replace("\t", " ").strip()
+                if len(query) > 0 and len(para) > 0:
+                    f.write("{}\t{}\n".format(query, para))
                 
 if __name__ == '__main__':
     generate_finetune_data()
