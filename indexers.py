@@ -1,14 +1,13 @@
 from dataset import GitHubCorpusRawTextDataset
 from typing import List, Union, Tuple, Dict
 from github import Github
-from torch import nn
-from sentence_transformers import util
 import numpy as np
 import time
 import json
 import os
 import logging
 import pickle
+import requests
 
 if "JPY_PARENT_PID" in os.environ:
     from tqdm.notebook import tqdm
@@ -22,6 +21,7 @@ class RepoDescription(str): pass
 class RepoLink(str): pass
 class RepoStars(int): pass
 class SearchScore(int): pass
+class CloudLoadingException(Exception): pass
 GithubQueryResult = Tuple[RepoName, RepoLink, RepoStars, RepoDescription]
 TestCase = Tuple[str, List[RepoName]]
 
@@ -29,13 +29,36 @@ try:
     GH_TOKEN = os.getenv('GH_TOKEN') 
     # see https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
 except:
-    GH_TOKEN = ''
+    GH_TOKEN = ''    
     
+class ProductionModel:
+    API_URL = "https://api-inference.huggingface.co/models/Enoch2090/MAGI"
+    def __init__(self, token):
+        self.headers = {
+            "Authorization": token
+        }
+    def query(self, payload):
+        response = requests.post(self.API_URL, headers=self.headers, json=payload)
+        try: 
+            return response.json()['error']
+        except:
+            return response.json()
+    def encode(self, query, show_progress_bar=False):
+        data = self.query({
+            "inputs": query,
+        })
+        if type(data) is str:
+            raise(CloudLoadingException('Cloud model not ready'))
+        else:
+            return np.array(data)
+    def similarity_func(self, query_embedding, pooled_embeddings):
+        return (pooled_embeddings @ query_embedding.T).squeeze(axis=1)
+
 class MagiIndexer:
     def __init__(
         self, 
         datasets: List[GitHubCorpusRawTextDataset], 
-        model: nn.Module, 
+        model, 
         embedding_file: str = None
     ) -> Tuple[List[GithubQueryResult], int]:
         self.datasets = {d.lang: d for d in datasets}
@@ -74,16 +97,13 @@ class MagiIndexer:
 
     def search(
         self, 
-        query: int, 
+        query: str, 
         lang: str, 
         rank=10
     ):
         start = time.time()
         query_embedding = self.model.encode([query], show_progress_bar=False)
-        similarity = util.dot_score(
-            query_embedding, 
-            self.pooled_embeddings[lang]
-        ).detach().numpy().squeeze(axis=0)
+        similarity = self.model.similarity_func(query_embedding, self.pooled_embeddings[lang])
         unsorted_index = np.argpartition(similarity, -rank)[-rank:]
         # unsorted_index = np.argsort(similarity)
         sorted_index = unsorted_index[np.flip(np.argsort(similarity[unsorted_index]))]
@@ -96,8 +116,8 @@ class MagiIndexer:
             )
         end = time.time()
         runtime = float(end - start)
-        return results, runtime
-
+        return results, runtime    
+    
 class GitHubSearcher:
     def __init__(
         self, 
@@ -182,7 +202,7 @@ def compare_searches(
     return baseline_MAPs, model_MAPs
     
 def benchmark_model(
-    model: nn.Module, 
+    model, 
     corpus: str, 
     test_file: str = './datafile/queries.txt',
     embedding_file: str = None,
@@ -197,7 +217,7 @@ def benchmark_model(
     logger.info(f'baseline MAP={json.dumps(baseline_MAPs, indent=2)}, \nmodel MAP={json.dumps(model_MAPs, indent=2)}')
 
 def cache_embeddings(
-    model: nn.Module, 
+    model, 
     corpus: str, 
     cache_loc: str, 
     langs: list = ['Python']
@@ -212,7 +232,7 @@ def cache_embeddings(
     logger.info(f'Cached embeddings of {len(datasets)} datasets to {cache_loc}.')
         
 def inspect_model(
-    model: nn.Module, 
+    model, 
     corpus: str, 
     test_file: str = './datafile/queries.txt',
     embedding_file: str = None,

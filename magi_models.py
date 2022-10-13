@@ -3,7 +3,7 @@ import torch
 import fire
 import logging
 from torch import nn
-from sentence_transformers import SentenceTransformer, models, datasets, losses, InputExample
+from sentence_transformers import SentenceTransformer, models, datasets, losses, InputExample, util
 from dataclasses import dataclass
 from pathlib import Path
 from datetime import datetime
@@ -22,7 +22,7 @@ class SentenceBertTrainConfig:
     num_epochs: int = 3
     model_name: str = './datafile/ghv6-model'
     train_data: str = './datafile/generated_queries_all_ghv6.tsv'
-
+    
 def get_distilbert_base_dotprod(model_file=None):
     if model_file is not None:
         try:
@@ -33,9 +33,14 @@ def get_distilbert_base_dotprod(model_file=None):
         word_emb = models.Transformer('sentence-transformers/msmarco-distilbert-base-dot-prod-v3')
         pooling = models.Pooling(word_emb.get_word_embedding_dimension())
         model = SentenceTransformer(modules=[word_emb, pooling])
+    model.similarity_func = tensor_dot_prod_similiarity
     return model.to(device)
 
-
+def tensor_dot_prod_similiarity(query_embedding, pooled_embeddings):
+    return util.dot_score(
+            query_embedding, 
+            pooled_embeddings
+        ).detach().numpy().squeeze(axis=0)
 
 def train_model(model: nn.Module, config: SentenceBertTrainConfig) -> nn.Module:
     with open(Path(config.model_name)/'train_loss.log', 'w') as f:
@@ -64,7 +69,7 @@ def train_model(model: nn.Module, config: SentenceBertTrainConfig) -> nn.Module:
 def entry( 
     train: bool = True,
     corpus: str = None,
-    langs: list = ['Python', 'JavaScript'],
+    langs: list = ['Python', 'JavaScript', 'C++'],
     query_data: str = None,
     model_name: str = None,
     batch_size: int = 16,
@@ -113,6 +118,8 @@ def entry(
         else:
             model = get_distilbert_base_dotprod('Enoch2090/MAGI')
         
+    model.similarity_func = tensor_dot_prod_similiarity
+    
     if benchmark:
         logger.info(f'Benchmarking on {corpus}')
         benchmark_model(

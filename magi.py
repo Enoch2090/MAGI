@@ -8,7 +8,7 @@ import random
 import logging
 import requests
 from tqdm import tqdm, trange
-from magi_models import *
+# from magi_models import *
 from dataset import *
 from indexers import *
 logging.basicConfig()
@@ -55,7 +55,10 @@ class CachedIndexer:
     
 @st.experimental_memo
 def get_model():
-    return get_distilbert_base_dotprod('Enoch2090/MAGI')
+    # return get_distilbert_base_dotprod('Enoch2090/MAGI')
+    model = ProductionModel(os.getenv('HUGGINGFACE_TOKEN'))
+    print(model.headers)
+    return model
 
 @st.experimental_memo
 def get_sample_queries():
@@ -75,10 +78,13 @@ def display_results(results):
 
 def run_query(query, lang):
     with st.spinner("Querying..."):
-        st.markdown(f'Results for "{query}" in `{lang}`')
-        results, retrieve_time = indexer.search(query, lang=lang, rank=10)
-        display_results(results)
-        st.markdown(f'Retrieved in {retrieve_time:.4f} seconds with {device} backend')
+        try:
+            st.markdown(f'Results for "{query}" in `{lang}`')
+            results, retrieve_time = indexer.search(query, lang=lang, rank=10)
+            display_results(results)
+            st.markdown(f'Retrieved in {retrieve_time:.4f} seconds with {device} backend')
+        except CloudLoadingException:
+            st.markdown(f'Cloud model is currently loading, please retry after 30 seconds.')
         
 # ----------------Options----------------
 def option_query(samples):
@@ -119,7 +125,7 @@ datasets = [
     CachedDataset('./ghv7_transformed.json', lang=lang, chunk_size=1024, max_num=4) for lang in LANGS
 ]
 model = get_model()
-indexer = CachedIndexer(datasets, model)
+indexer = CachedIndexer(datasets, model, 'msmarco-distilbert-base-dot-prod-v3_ghv7.pkl')
 samples = get_sample_queries()
 
 if option == 'Query':
