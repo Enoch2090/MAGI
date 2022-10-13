@@ -3,6 +3,7 @@ import re
 import os
 import numpy as np
 import logging
+import hashlib
 from tqdm.notebook import tqdm
 from dataclasses import dataclass
 from abc import ABC
@@ -50,6 +51,7 @@ class GitHubCorpusRawTextDataset(Dataset):
         '''
         with open(file_dir, 'r') as f:
             raw_data = json.load(f)
+        self.file_dir = file_dir
         self.raw_data = []
         self.data = []
         self.chunk_size = chunk_size
@@ -128,6 +130,10 @@ class GitHubCorpusRawTextDataset(Dataset):
             print(f'Repository {repo_name} not found')
             return None
 
+def get_hash(file_dir: str) -> str:
+    with open(file_dir, 'rb') as f:
+        return hashlib.md5(f.read()).hexdigest()
+    
 def generate_finetune_data(file_dir: str='./datafile/ghv6.json', output_dir: str='generated_queries_all_ghv6.tsv'):
     from sentence_transformers import InputExample
     from transformers import T5Tokenizer, T5ForConditionalGeneration

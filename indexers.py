@@ -1,4 +1,4 @@
-from dataset import GitHubCorpusRawTextDataset
+from dataset import GitHubCorpusRawTextDataset, get_hash
 from typing import List, Union, Tuple, Dict
 from github import Github
 import numpy as np
@@ -7,6 +7,7 @@ import json
 import os
 import logging
 import pickle
+import hashlib
 import requests
 
 if "JPY_PARENT_PID" in os.environ:
@@ -66,13 +67,17 @@ class MagiIndexer:
         self.model = model
         self.embeddings = {}
         if embedding_file is not None:
+            checksum = get_hash(self.datasets[self.langs[0]].file_dir)
             with open(embedding_file, 'rb') as f:
                 self.embeddings = pickle.load(f)
-            logger.info(f'Loaded embeddings from {embedding_file}')
+            assert self.embeddings['MD5_checksum'] == checksum, 'Embedding is not generated from the same dataset'
+            logger.info(f'Loaded embeddings from {embedding_file}, checksum passed')
             lang = self.langs[-1]
         else:
+            self.embeddings['MD5_checksum'] = get_hash(self.datasets[self.langs[0]].file_dir)
             for lang in self.langs:
                 self.embeddings[lang] = self.model.encode([x[0] for x in self.datasets[lang]])
+            logger.info(f'Generated new embeddings, checksum saved')
         # All embedding matrices share the same width, so just take the last one for d
         _, d = self.embeddings[lang].shape
         self.pooled_embeddings = {
