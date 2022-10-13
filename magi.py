@@ -125,7 +125,7 @@ datasets = [
     CachedDataset('./ghv7_transformed.json', lang=lang, chunk_size=1024, max_num=4) for lang in LANGS
 ]
 model = get_model()
-indexer = CachedIndexer(datasets, model, 'msmarco-distilbert-base-dot-prod-v3_ghv7.pkl')
+indexer = CachedIndexer(datasets, model)
 samples = get_sample_queries()
 
 if option == 'Query':
