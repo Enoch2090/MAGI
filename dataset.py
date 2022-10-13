@@ -15,11 +15,11 @@ else:
 try:
     import torch
     from torch.utils.data import Dataset
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 except ModuleNotFoundError:
     class Dataset(ABC): pass
- 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
+    device = 'Huggingface inference API'
+    
 @dataclass
 class FineTuneDataGenerationConfig:
     batch_size: int = 16   # Batch size
