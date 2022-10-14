@@ -85,10 +85,10 @@ def run_query(query, lang):
             st.markdown(f'Retrieved in {retrieve_time:.4f} seconds with {device} backend')
         except CloudLoadingException:
             st.markdown(f'Cloud model is currently loading, please retry after 30 seconds.')
-            my_bar = st.progress(0.)
-            for percent_complete in range(30):
+            my_bar = st.progress(0)
+            for percent_complete in range(33):
                 time.sleep(1)
-                my_bar.progress(percent_complete + 1 / 30)
+                my_bar.progress(percent_complete + 3)
         
 # ----------------Options----------------
 def option_query(samples):
