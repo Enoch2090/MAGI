@@ -77,12 +77,12 @@ def display_results(results):
         st.markdown('''<hr style="height:2px;border:none;color:#CCC;background-color:#CCC;" />''', unsafe_allow_html=True)
 
 def run_query(query, lang):
-    with st.spinner("Querying..."):
         try:
-            st.markdown(f'Results for "{query}" in `{lang}`')
-            results, retrieve_time = indexer.search(query, lang=lang, rank=10)
-            display_results(results)
-            st.markdown(f'Retrieved in {retrieve_time:.4f} seconds with {device} backend')
+            with st.spinner("Querying..."):
+                st.markdown(f'Results for "{query}" in `{lang}`')
+                results, retrieve_time = indexer.search(query, lang=lang, rank=10)
+                display_results(results)
+                st.markdown(f'Retrieved in {retrieve_time:.4f} seconds with {device} backend')
         except CloudLoadingException:
             st.markdown(f'Cloud model is currently loading, please retry after 30 seconds.')
             my_bar = st.progress(0)
