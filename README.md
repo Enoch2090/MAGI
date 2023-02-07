@@ -79,3 +79,8 @@ Future Works:
 - Use StackOverFlow API and HackerNews API to mine query-result pairs.
 - Use the previous result, curate a list of query-result pairs for each language as benchmark standard. We only have Python at the moment, and the number of queries is small.
 - Use the previous result, introduce the query-result pairs in the training process to further finetune the model.
+
+## Related Projects
+- [Enoch2090/magi_dataset](https://github.com/Enoch2090/magi_dataset): Data interface for MAGI.
+- [Grep.app](https://grep.app/): Exact match search over GitHub.
+- [arXiv Xplorer][https://arxivxplorer.com/]: Semantic search on arXiv for finding papers.
