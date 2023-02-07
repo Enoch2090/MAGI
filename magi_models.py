@@ -13,7 +13,7 @@ from indexers import benchmark_model, inspect_model, cache_embeddings
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 logging.basicConfig()
-logger = logging.getLogger()
+logger = logging.getLogger('MAGI_training')
 logger.setLevel(logging.INFO)
 
 @dataclass

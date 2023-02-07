@@ -12,7 +12,7 @@ from tqdm import tqdm, trange
 from dataset import *
 from indexers import *
 logging.basicConfig()
-logger = logging.getLogger()
+logger = logging.getLogger('MAGI_interface')
 logger.setLevel(logging.INFO)
 
 GH_TOKEN = ''

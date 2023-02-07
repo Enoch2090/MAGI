@@ -35,7 +35,7 @@ Which includes PyTorch, transformers and other DL-related packages. We list some
 
 Retrain:
 ```bash
-python3 magi_models.py --train True --corpus ./datafile/ghv7_transformed.json --batch_size 16 --benchmark_file ./datafile/queries.txt 
+python3 magi_models.py --train True --corpus ./datafile/ghv7_transformed.json --batch_size 16 --benchmark True --benchmark_file ./datafile/queries.txt --inspection False
 ```
 Benchmark only:
 ```bash
@@ -46,18 +46,36 @@ Inspect only:
 ```bash
 python3 magi_models.py --corpus ./datafile/ghv7_transformed.json --train False --load_from Enoch2090/MAGI --benchmark False --inspection True --benchmark_file ./datafile/queries.txt
 ```
+This mode is used to inspect the efficiency of models via the mAP metric, given the query file `./datafile/queries.txt`.
 
 Cache only:
 ```bash
 python3 magi_models.py --corpus ./datafile/ghv7_transformed.json --train False --load_from Enoch2090/MAGI --benchmark False --inspection False --cache True --cache_loc ./datafile/msmarco-distilbert-base-dot-prod-v3_ghv7.pkl
 ```
+This mode is used when training is complete. Use this mode to convert the database into embeddings and cache into a .pkl file.
 
 Streamlit interface:
 ```bash
 streamlit run magi.py --server.port 6006
 ```
+This script provides a simple user interface via Streamlit. Not intended for production.
 
 Data Inspection:
 ```bash
 streamlit run browse.py --server.port 6006
 ```
+This script uses fuzzy search to match exact repo names, allowing developers to check whether an exact repo is in the database, and to inspect the raw data of that repo.
+
+## Model Design Choices
+Current architecture:
+- Chunkify corpus in each repository to 512 words chunks (`dataset.GitHubCorpusRawTextDataset`).
+- Use T5 model to generate synthetic queries on the first few chunks of each repository. The underlying idea is that the first few chunks in each repository should have more introductions on its use. Note that in the `__init__` method of `dataset.GitHubCorpusRawTextDataset`, the parameter keys_used defaults to `['hn_comments', 'readme']`. Corpus value stored in these keys are merged into one single string first before the chunk process, therefore if any HackerNews comments exist, they will appear before the GitHub README as I identify them as more valuable corpus. This design may be changed if other choices yields better results.
+- After the synthetic queries are generated (`dataset.generate_finetune_data`), train on the (corpus, query) tuples to finetune the Sentence Transformer.
+- Use the finetuned transformer to encode the database into embeddings. In `indexers.cache_embeddings`, you may find that currently only the first 4 chunks for each repository is cached into embeddings. That means for each repo, it has an embedding of the shape (n, 768) where n is 1, 2, 3 or 4.
+- Use the finetuned transformer to encode query. In `indexers.MagiIndexer`, the encoded query is compared with stored embeddings for the selected programming language.
+
+Future Works:
+- Identify in each repo which chunks are more valuable to keep, instead of brutely keeping the first few. 
+- Use StackOverFlow API and HackerNews API to mine query-result pairs.
+- Use the previous result, curate a list of query-result pairs for each language as benchmark standard. We only have Python at the moment, and the number of queries is small.
+- Use the previous result, introduce the query-result pairs in the training process to further finetune the model.

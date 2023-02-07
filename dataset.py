@@ -4,15 +4,12 @@ import os
 import numpy as np
 import logging
 import hashlib
-from tqdm.notebook import tqdm
-from dataclasses import dataclass
+from magi_dataset import GitHubDataset
+from dataclasses import dataclass, asdict
 from abc import ABC
+from tqdm.auto import tqdm
+from itertools import chain
 
-if "JPY_PARENT_PID" in os.environ:
-    from tqdm.notebook import tqdm
-else:
-    from tqdm import tqdm
-    
 try:
     import torch
     from torch.utils.data import Dataset
@@ -23,11 +20,12 @@ except ModuleNotFoundError:
     
 @dataclass
 class FineTuneDataGenerationConfig:
-    batch_size: int = 16   # Batch size
-    num_queries: int = 8   # Number of queries to generate for every paragraph
+    batch_size: int = 16            # Batch size
+    num_queries: int = 4            # Number of queries to generate for every paragraph
     max_length_paragraph: int = 512 # Max length for paragraph
-    max_length_query: int = 64   # Max length for output query
-
+    max_length_query: int = 64      # Max length for output query
+    max_chunk_per_repo: int = 5     # Max chunks selected for each repo
+  
 def remove_punkt(text: str) -> str:
     return re.sub(r'[^\w\s]', '', text)
 
@@ -38,7 +36,7 @@ def remove_non_ascii(text: str) -> str:
 class GitHubCorpusRawTextDataset(Dataset):
     def __init__(
         self, 
-        file_dir: str, 
+        file_dir: str = None, 
         keys_used: list = ['hn_comments', 'readme'], 
         lang: str = None, 
         chunk_size:int = 512, 
@@ -46,21 +44,28 @@ class GitHubCorpusRawTextDataset(Dataset):
     ):
         '''
         Arguments:
-            - file_dir (str): File name of a .json file corpus.
+            - file_dir (str): File name of a .json file corpus. Leave it as None to let magi_dataset download the default file.
             - key_used (list[str]): A list of keys in the json file to use as corpus. 
         '''
-        with open(file_dir, 'r') as f:
-            raw_data = json.load(f)
-        self.file_dir = file_dir
-        self.raw_data = []
+        # with open(file_dir, 'r') as f:
+        #     raw_data = json.load(f)
+        raw_data = GitHubDataset(
+            empty = False,
+            file_path = file_dir
+        )
         self.data = []
+        self.raw_data = []
         self.chunk_size = chunk_size
         if lang:
             self.lang = lang
         for repo in raw_data:
+            # transform the dataclass to a dictionary
+            # https://docs.python.org/3/library/dataclasses.html#dataclasses.asdict
+            repo = asdict(repo) 
             if lang and repo['lang'] != lang:
                 # if language parameter is used during initialization,
-                # initialize this dataset object as
+                # initialize this dataset object as specified language only
+                # this allows us to use this dataset object to retrieve information (local mode only)
                 continue
             cleaned_corpus = ''
             for key in keys_used:
@@ -134,31 +139,41 @@ def get_hash(file_dir: str) -> str:
     with open(file_dir, 'rb') as f:
         return hashlib.md5(f.read()).hexdigest()
     
-def generate_finetune_data(file_dir: str='./datafile/ghv6.json', output_dir: str='generated_queries_all_ghv6.tsv'):
+def generate_finetune_data(
+    file_dir: str = './datafile/ghv6.json', 
+    output_dir: str = 'generated_queries_all_ghv6.tsv'
+):
     from sentence_transformers import InputExample
     from transformers import T5Tokenizer, T5ForConditionalGeneration
     # Decouple the transformers and PyTorch dependency
     # This allows access to the GitHubCorpusRawTextDataset object without installing PyTorch dependency
     ft_conf = FineTuneDataGenerationConfig()
-    ft_dataset = GitHubCorpusRawTextDataset(file_dir, chunk_size=512, max_num=50)
+    ft_dataset = GitHubCorpusRawTextDataset(file_dir, chunk_size=512, max_num=ft_conf.max_chunk_per_repo)
     ft_paragraphs = [x[0] for x in ft_dataset]
     ft_tokenizer = T5Tokenizer.from_pretrained('BeIR/query-gen-msmarco-t5-large-v1')
     ft_model = T5ForConditionalGeneration.from_pretrained('BeIR/query-gen-msmarco-t5-large-v1')
+    # https://huggingface.co/BeIR/query-gen-msmarco-t5-large-v1
     ft_model.eval()
     ft_model.to(device)
+    
     with open(output_dir, 'w') as f:
         for start_idx in tqdm(range(0, len(ft_paragraphs), ft_conf.batch_size)):
-            sub_paragraphs = ft_paragraphs[start_idx:start_idx + ft_conf.batch_size]
-            inputs = ft_tokenizer.prepare_seq2seq_batch(sub_paragraphs, max_length=ft_conf.max_length_paragraph, truncation=True, return_tensors='pt').to(device)
+            sub_paragraphs = ft_paragraphs[start_idx:(start_idx + ft_conf.batch_size)]
+            input_ids = ft_tokenizer.encode(
+                sub_paragraphs, 
+                max_length = ft_conf.max_length_paragraph, 
+                truncation = True, 
+                return_tensors = 'pt'
+            ).to(device)
             outputs = ft_model.generate(
-                **inputs,
-                max_length=ft_conf.max_length_query,
-                do_sample=True,
-                top_p=0.95,
-                num_return_sequences=ft_conf.num_queries
+                input_ids = input_ids,
+                max_length = ft_conf.max_length_query,
+                do_sample = True,
+                top_p = 0.95,
+                num_return_sequences = ft_conf.num_queries
             )
             for idx, out in enumerate(outputs):
-                query = ft_tokenizer.decode(out, skip_special_tokens=True)
+                query = ft_tokenizer.decode(out, skip_special_tokens = True)
                 query = remove_non_ascii(query).replace("\t", " ").strip()
                 para = sub_paragraphs[int(idx/ft_conf.num_queries)]
                 para = remove_non_ascii(para).replace("\t", " ").strip()

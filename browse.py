@@ -30,16 +30,24 @@ st.session_state['file'] = selected_file
 with open(st.session_state['file'], 'r') as f:
     repo_dict = json.load(f)
 
+all_langs = set([x['lang'] for x in repo_dict])
+
 repo_search = {
     remove_emojis(f'{r["name"]}, {r["description"]}'): r for r in repo_dict
 }
 
 search_text = st.text_input('Search a repository...', value='')
 
+search_scope = st.multiselect(
+    'Language', all_langs, all_langs
+)
+
 if st.button('Apply'):
     result = process.extract(search_text, list(repo_search.keys()), limit=10)
-
+    
     for (r, _) in result:
+        if not (repo_search[r]['lang'] in search_scope):
+            continue
         st.markdown(f"🗂  [{repo_search[r]['name']}]({repo_search[r]['link']})")
         st.markdown(f"⭐️  {repo_search[r]['stars']} | {repo_search[r]['description']}")
         st.markdown(f'💾  Data:')

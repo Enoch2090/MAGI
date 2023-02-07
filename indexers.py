@@ -1,7 +1,7 @@
-
 from dataset import GitHubCorpusRawTextDataset, get_hash
 from typing import List, Union, Tuple, Dict
 from github import Github
+from tqdm.auto import tqdm
 import numpy as np
 import time
 import json
@@ -11,12 +11,7 @@ import pickle
 import hashlib
 import requests
 
-if "JPY_PARENT_PID" in os.environ:
-    from tqdm.notebook import tqdm
-else:
-    from tqdm import tqdm
-   
-logger = logging.getLogger()
+logger = logging.getLogger('MAGI_training')
 
 class RepoName(str): pass
 class RepoDescription(str): pass
@@ -34,6 +29,7 @@ except:
     GH_TOKEN = ''    
     
 class ProductionModel:
+    # uses model hosted on Huggingface API for inference. This class is abstracted to be similar to a Transformer model.
     API_URL = "https://api-inference.huggingface.co/models/Enoch2090/MAGI"
     def __init__(self, token):
         self.headers = {
@@ -63,22 +59,33 @@ class MagiIndexer:
         model, 
         embedding_file: str = None
     ) -> Tuple[List[GithubQueryResult], int]:
+        '''
+        Arguments:
+        - datasets: A list of GitHubCorpusRawTextDataset, each representing repositories of a specific programming language.
+        - model: A SentenceTransformer model with its similarity_func method overrided with a similarity function (e.g. model.similarity_func = magi_models.tensor_dot_prod_similiarity), or a indexers.ProductionModel.
+        - embedding_file: Embeddings generated with indexers.cache_embeddings. Must match the version of datasets, otherwise the result is not guranteed.
+        '''
         self.datasets = {d.lang: d for d in datasets}
         self.langs = [d.lang for d in datasets]
         self.model = model
         self.embeddings = {}
         if embedding_file is not None:
-            checksum = get_hash(self.datasets[self.langs[0]].file_dir)
+            # FIXME:
+            # Checksum validation temporaily disabled.
+            # Implement checksum validation in magi_dataset in the future
+            # checksum = get_hash(self.datasets[self.langs[0]].file_dir)
             with open(embedding_file, 'rb') as f:
                 self.embeddings = pickle.load(f)
-            assert self.embeddings['MD5_checksum'] == checksum, 'Embedding is not generated from the same dataset'
-            logger.info(f'Loaded embeddings from {embedding_file}, checksum={checksum} passed')
+            # assert self.embeddings['MD5_checksum'] == checksum, 'Embedding is not generated from the same dataset'
+            # logger.info(f'Loaded embeddings from {embedding_file}, checksum={checksum} passed')
+            logger.info(f'Loaded embeddings from {embedding_file}')
             lang = self.langs[-1]
         else:
-            self.embeddings['MD5_checksum'] = get_hash(self.datasets[self.langs[0]].file_dir)
+            # self.embeddings['MD5_checksum'] = get_hash(self.datasets[self.langs[0]].file_dir)
             for lang in self.langs:
                 self.embeddings[lang] = self.model.encode([x[0] for x in self.datasets[lang]])
-            logger.info(f'Generated new embeddings, checksum={self.embeddings["MD5_checksum"]} saved')
+            # logger.info(f'Generated new embeddings, checksum={self.embeddings["MD5_checksum"]} saved')
+            logger.info(f'Generated new embeddings saved')
         # All embedding matrices share the same width, so just take the last one for d
         _, d = self.embeddings[lang].shape
         self.pooled_embeddings = {
@@ -125,6 +132,7 @@ class MagiIndexer:
         return results, runtime    
     
 class GitHubSearcher:
+    # Comparison searcher using GitHub's API to perform plain text search
     def __init__(
         self, 
         token: str

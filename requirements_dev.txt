@@ -3,6 +3,7 @@ deep_translator==1.8.3
 fire==0.4.0
 hn==0.2.2
 langdetect==1.0.9
+magi_dataset==1.0.0
 Markdown==3.3.4
 numpy==1.20.1
 PyGithub==1.55
