@@ -83,4 +83,4 @@ Future Works:
 ## Related Projects
 - [Enoch2090/magi_dataset](https://github.com/Enoch2090/magi_dataset): Data interface for MAGI.
 - [Grep.app](https://grep.app/): Exact match search over GitHub.
-- [arXiv Xplorer][https://arxivxplorer.com/]: Semantic search on arXiv for finding papers.
+- [arXiv Xplorer](https://arxivxplorer.com): Semantic search on arXiv for finding papers.
