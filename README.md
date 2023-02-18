@@ -31,26 +31,29 @@ The development enviroment is installed via:
 ```bash
 pip install -r requirements_dev.txt
 ```
-Which includes PyTorch, transformers and other DL-related packages. We list some useful commands during development here:
+Which includes PyTorch, transformers and other DL-related packages. We list some useful commands during development here. 
 
 Retrain:
 ```bash
-python3 magi_models.py --train True --corpus ./datafile/ghv7_transformed.json --batch_size 16 --benchmark True --benchmark_file ./datafile/queries.txt --inspection False
+python3 magi_models.py --train True --corpus default --batch_size 16 --benchmark True --benchmark_file ./datafile/queries.txt --inspection False
 ```
+
+By setting `corpus='default'`, we use the default data pulled according to the list https://huggingface.co/datasets/Enoch2090/github_semantic_search/blob/main/list.json. You may also set this parameter as a valid .json file.
+
 Benchmark only:
 ```bash
-python3 magi_models.py --corpus ./datafile/ghv7_transformed.json --train False --benchmark_file ./datafile/queries.txt --embedding_file ./datafile/msmarco-distilbert-base-dot-prod-v3_ghv7.pkl
+python3 magi_models.py --corpus default --train False --benchmark_file ./datafile/queries.txt --embedding_file ./datafile/msmarco-distilbert-base-dot-prod-v3_ghv7.pkl
 ```
 
 Inspect only:
 ```bash
-python3 magi_models.py --corpus ./datafile/ghv7_transformed.json --train False --load_from Enoch2090/MAGI --benchmark False --inspection True --benchmark_file ./datafile/queries.txt
+python3 magi_models.py --corpus default --train False --load_from Enoch2090/MAGI --benchmark False --inspection True --benchmark_file ./datafile/queries.txt
 ```
 This mode is used to inspect the efficiency of models via the mAP metric, given the query file `./datafile/queries.txt`.
 
 Cache only:
 ```bash
-python3 magi_models.py --corpus ./datafile/ghv7_transformed.json --train False --load_from Enoch2090/MAGI --benchmark False --inspection False --cache True --cache_loc ./datafile/msmarco-distilbert-base-dot-prod-v3_ghv7.pkl
+python3 magi_models.py --corpus default --train False --load_from Enoch2090/MAGI --benchmark False --inspection False --cache True --cache_loc ./datafile/msmarco-distilbert-base-dot-prod-v3_ghv7.pkl
 ```
 This mode is used when training is complete. Use this mode to convert the database into embeddings and cache into a .pkl file.
 

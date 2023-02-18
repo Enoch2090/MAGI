@@ -44,11 +44,13 @@ class GitHubCorpusRawTextDataset(Dataset):
     ):
         '''
         Arguments:
-            - file_dir (str): File name of a .json file corpus. Leave it as None to let magi_dataset download the default file.
+            - file_dir (str): File name of a .json file corpus. Set it as 'default' or None to let magi_dataset download the default file.
             - key_used (list[str]): A list of keys in the json file to use as corpus. 
         '''
         # with open(file_dir, 'r') as f:
         #     raw_data = json.load(f)
+        if file_path = 'default':
+            file_path = None
         raw_data = GitHubDataset(
             empty = False,
             file_path = file_dir
