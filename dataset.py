@@ -49,8 +49,8 @@ class GitHubCorpusRawTextDataset(Dataset):
         '''
         # with open(file_dir, 'r') as f:
         #     raw_data = json.load(f)
-        if file_path = 'default':
-            file_path = None
+        if file_dir == 'default':
+            file_dir = None
         raw_data = GitHubDataset(
             empty = False,
             file_path = file_dir
