@@ -110,6 +110,9 @@ def entry(
     query_source: str = None,
     query_data_dir: str = None
 ):
+    # Add two arguments, query_source and query_data_dir
+    # query_source is the source of query: stackoverflow etc.
+    # query_data_dir is its directory path
     if train:
         assert corpus or query_data, 'ERROR: must input one of corpus or query data tsv'
         model_name = datetime.now().strftime('%y-%m-%d_%h-%M')
