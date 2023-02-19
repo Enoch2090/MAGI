@@ -143,44 +143,67 @@ def get_hash(file_dir: str) -> str:
     
 def generate_finetune_data(
     file_dir: str = './datafile/ghv6.json', 
-    output_dir: str = 'generated_queries_all_ghv6.tsv'
+    output_dir: str = 'generated_queries_all_ghv6.tsv',
+    query_source: str = None,
+    query_data_dir: str = './data_collection/data/data.txt'
 ):
-    from sentence_transformers import InputExample
-    from transformers import T5Tokenizer, T5ForConditionalGeneration
-    # Decouple the transformers and PyTorch dependency
-    # This allows access to the GitHubCorpusRawTextDataset object without installing PyTorch dependency
+    # query_source: The source of the query (stackoverflow)
+    # query_data_dir: The directory of the query data
     ft_conf = FineTuneDataGenerationConfig()
     ft_dataset = GitHubCorpusRawTextDataset(file_dir, chunk_size=512, max_num=ft_conf.max_chunk_per_repo)
     ft_paragraphs = [x[0] for x in ft_dataset]
-    ft_tokenizer = T5Tokenizer.from_pretrained('BeIR/query-gen-msmarco-t5-large-v1')
-    ft_model = T5ForConditionalGeneration.from_pretrained('BeIR/query-gen-msmarco-t5-large-v1')
-    # https://huggingface.co/BeIR/query-gen-msmarco-t5-large-v1
-    ft_model.eval()
-    ft_model.to(device)
-    
-    with open(output_dir, 'w') as f:
-        for start_idx in tqdm(range(0, len(ft_paragraphs), ft_conf.batch_size)):
-            sub_paragraphs = ft_paragraphs[start_idx:(start_idx + ft_conf.batch_size)]
-            input_ids = ft_tokenizer.encode(
-                sub_paragraphs, 
-                max_length = ft_conf.max_length_paragraph, 
-                truncation = True, 
-                return_tensors = 'pt'
-            ).to(device)
-            outputs = ft_model.generate(
-                input_ids = input_ids,
-                max_length = ft_conf.max_length_query,
-                do_sample = True,
-                top_p = 0.95,
-                num_return_sequences = ft_conf.num_queries
-            )
-            for idx, out in enumerate(outputs):
-                query = ft_tokenizer.decode(out, skip_special_tokens = True)
-                query = remove_non_ascii(query).replace("\t", " ").strip()
-                para = sub_paragraphs[int(idx/ft_conf.num_queries)]
-                para = remove_non_ascii(para).replace("\t", " ").strip()
-                if len(query) > 0 and len(para) > 0:
+    if query_source == "stackoverflow":
+        # Use the query from Stackoverflow
+
+        out_file = open(query_data_dir, "r")
+        query_data = json.loads(out_file.read())
+        python_query_data = query_data['Python']
+        # Currently just use python, expand to other languages later
+        with open(output_dir, 'w') as f:
+            for idx in tqdm(range(0, len(python_query_data))):
+                query = python_query_data[idx][0]
+                repo_name = python_query_data[idx][1][0]
+                repo_index = ft_dataset.repo_to_vec[repo_name]
+                for i in repo_index:
+                    para = ft_paragraphs[i]
+                    para = remove_non_ascii(para).replace("\t", " ").strip()
                     f.write("{}\t{}\n".format(query, para))
+
+    else:
+        from sentence_transformers import InputExample
+        from transformers import T5Tokenizer, T5ForConditionalGeneration
+        # Decouple the transformers and PyTorch dependency
+        # This allows access to the GitHubCorpusRawTextDataset object without installing PyTorch dependency
+        
+        ft_tokenizer = T5Tokenizer.from_pretrained('BeIR/query-gen-msmarco-t5-large-v1')
+        ft_model = T5ForConditionalGeneration.from_pretrained('BeIR/query-gen-msmarco-t5-large-v1')
+        # https://huggingface.co/BeIR/query-gen-msmarco-t5-large-v1
+        ft_model.eval()
+        ft_model.to(device)
+        
+        with open(output_dir, 'w') as f:
+            for start_idx in tqdm(range(0, len(ft_paragraphs), ft_conf.batch_size)):
+                sub_paragraphs = ft_paragraphs[start_idx:(start_idx + ft_conf.batch_size)]
+                input_ids = ft_tokenizer.encode(
+                    sub_paragraphs, 
+                    max_length = ft_conf.max_length_paragraph, 
+                    truncation = True, 
+                    return_tensors = 'pt'
+                ).to(device)
+                outputs = ft_model.generate(
+                    input_ids = input_ids,
+                    max_length = ft_conf.max_length_query,
+                    do_sample = True,
+                    top_p = 0.95,
+                    num_return_sequences = ft_conf.num_queries
+                )
+                for idx, out in enumerate(outputs):
+                    query = ft_tokenizer.decode(out, skip_special_tokens = True)
+                    query = remove_non_ascii(query).replace("\t", " ").strip()
+                    para = sub_paragraphs[int(idx/ft_conf.num_queries)]
+                    para = remove_non_ascii(para).replace("\t", " ").strip()
+                    if len(query) > 0 and len(para) > 0:
+                        f.write("{}\t{}\n".format(query, para))
                 
 if __name__ == '__main__':
     generate_finetune_data()

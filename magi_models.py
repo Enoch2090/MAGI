@@ -3,7 +3,7 @@ import torch
 import fire
 import logging
 from torch import nn
-from sentence_transformers import SentenceTransformer, models, datasets, losses, InputExample, util
+from sentence_transformers import SentenceTransformer, models, datasets, losses, InputExample, util, evaluation
 from dataclasses import dataclass
 from pathlib import Path
 from datetime import datetime
@@ -59,9 +59,35 @@ def train_model(model: nn.Module, config: SentenceBertTrainConfig) -> nn.Module:
         random.shuffle(train_examples)
         train_dataloader = datasets.NoDuplicatesDataLoader(train_examples, batch_size=config.batch_size)
         train_loss = losses.MultipleNegativesRankingLoss(model)
+
+
+
+        sentences1 = ['Pyinstrument is a Python profiler to help you optimize your code - make it faster',
+                        'To get the biggest speed increase you should focus on the slowest part of your program.',
+                        'Pyinstrument helps you find the slowest part of the code',
+                        'Convolutional Neural network are specifically designed to process pixel data and are used in image recognition and processing.',
+                        'recurrent neural networks are capable of learning long-term dependencies, especially in sequence prediction problems',
+                        'A groupby operation involves some combination of splitting the object, applying a function, and combining the results.',
+                        'A word embedding is a learned representation for text where words that have the same meaning have a similar representation',
+                        'Conditional probability is defined as the likelihood of an event or outcome occurring, based on the occurrence of a previous event or outcome',
+                        'Reinforcement learning is a machine learning training method based on rewarding desired behaviors and/or punishing undesired ones'
+              ]
+        sentences2 = ['How to make my code faster',
+                        'Why does my program so slow', 
+                        'wanna to know how to optimze my code', 
+                        'How to process the images and do classification',
+                        'How to process sequential text',
+                        'how to calculate the two columns in a dataframe',
+                        'How to compare the similarity between two words',
+                        'Want to predict the stock ',
+                        'How to design an anomaly detection system?']
+        scores = [0.9, 0.9, 0.9, 1, 0.9, 0.1, 0.9, 0.1, 0.7]
+
+        evaluator = evaluation.EmbeddingSimilarityEvaluator(sentences1, sentences2, scores)
+        # Define the evaluator, should change later
         num_epochs = 3
         warmup_steps = int(len(train_dataloader) * num_epochs * 0.1)
-        model.fit(train_objectives=[(train_dataloader, train_loss)], epochs=num_epochs, warmup_steps=warmup_steps, show_progress_bar=True)
+        model.fit(train_objectives=[(train_dataloader, train_loss)], epochs=num_epochs, warmup_steps=warmup_steps, show_progress_bar=True, evaluator=evaluator)
     model.save(config.model_name)
     logger.info(f'Model saved to {config.model_name}')
     return model
@@ -80,7 +106,9 @@ def entry(
     inspection: bool = True,
     cache: bool = False,
     cache_loc: str = None,
-    load_from: str = None
+    load_from: str = None,
+    query_source: str = None,
+    query_data_dir: str = None
 ):
     if train:
         assert corpus or query_data, 'ERROR: must input one of corpus or query data tsv'
@@ -94,7 +122,9 @@ def entry(
             query_data = f'./datafile/{model_name}_queries.tsv'
             generate_finetune_data(
                 file_dir=corpus,
-                output_dir=query_data
+                output_dir=query_data,
+                query_source=query_source,
+                query_data_dir=query_data_dir  
             )
 
         config = SentenceBertTrainConfig(

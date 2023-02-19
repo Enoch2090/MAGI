@@ -1,0 +1,315 @@
+Is it safe to use public API in mobile application?	I have used public-apis list multiple times for building. It's sad to see a company taking over a community led project.<HN_SEP>Anyone know of a API to fetch high quality music artist and album art? I've been meaning to make something which sniffs whats playing on my Chromecast and display it on a screen but I've had difficulty finding a good source of art.Thank you for the suggestions :)<HN_SEP>Would be nice to see a column with request limit, if any.<HN_SEP>Anybody know of an API that allows you to genera
+Is it safe to use public API in mobile application?	te a temporary static HTML page with custom markup that I can send to it?<HN_SEP>Does anyone know about an API for getting high resolution book covers? Most of the book covers that are publicly out there are terrible.<HN_SEP>Obligatory link to the Tom Scott video on free APIs.  There's a lot of common knowledge there, but his discussion on free APIs seems relevant.  I've been burned by having hobbyist projects break from free APIs getting turned off.https://youtu.be/BxV14h0kFs0<HN_SEP>https://agify.io/This
+Is it safe to use public API in mobile application?	was in the list. How is this useful at all?<HN_SEP>Nice list. I looked at a few now. But since these are public/free APIs, I would be careful using them into production work, mainly for stability/scale reasons. Good for research/Prototype etc, IMO.<HN_SEP>Nice list! Ive used one of the art APIs listed, the Rijksmuseum one, to built a website which will show you a random object from their massive collection on each button click:https://randomrijks.com<HN_SEP>Also see https://public-apis.io for a similar sear
+Is it safe to use public API in mobile application?	chable listing of APIs.<HN_SEP>Great resource, bookmarked!<HN_SEP>Is this what you are looking for?https://www.programmableweb.com/category/all/apis<HN_SEP>I see no connection between these services. This list seems like a low effort post WatchMojo style.What is the purpose? How does this improve productivity that is mentioned in the submission title?<HN_SEP><div align="center">
+    <h1>Public APIs</h1>
+    <i>A collective list of free APIs for use in software and web development</i>
+</div>
+
+<br />
+
+<div al
+Is it safe to use public API in mobile application?	ign="center">
+    <sup>Status</sup>
+    <br />
+    <a href="https://github.com/public-apis/public-apis#index">
+        <img alt="Number of Categories" src="https://img.shields.io/badge/dynamic/json?url=https://api.publicapis.org/categories&label=Number%20of%20Categories&query=$.count&color=informational" />
+    </a>
+    <a href="https://github.com/public-apis/public-apis">
+        <img alt="Number of APIs" src="https://img.shields.io/badge/dynamic/json?url=https://api.publicapis.org/entries&label=Number%20o
+First time web scraping from a weathercast website	I have used public-apis list multiple times for building. It's sad to see a company taking over a community led project.<HN_SEP>Anyone know of a API to fetch high quality music artist and album art? I've been meaning to make something which sniffs whats playing on my Chromecast and display it on a screen but I've had difficulty finding a good source of art.Thank you for the suggestions :)<HN_SEP>Would be nice to see a column with request limit, if any.<HN_SEP>Anybody know of an API that allows you to genera
+First time web scraping from a weathercast website	te a temporary static HTML page with custom markup that I can send to it?<HN_SEP>Does anyone know about an API for getting high resolution book covers? Most of the book covers that are publicly out there are terrible.<HN_SEP>Obligatory link to the Tom Scott video on free APIs.  There's a lot of common knowledge there, but his discussion on free APIs seems relevant.  I've been burned by having hobbyist projects break from free APIs getting turned off.https://youtu.be/BxV14h0kFs0<HN_SEP>https://agify.io/This
+First time web scraping from a weathercast website	was in the list. How is this useful at all?<HN_SEP>Nice list. I looked at a few now. But since these are public/free APIs, I would be careful using them into production work, mainly for stability/scale reasons. Good for research/Prototype etc, IMO.<HN_SEP>Nice list! Ive used one of the art APIs listed, the Rijksmuseum one, to built a website which will show you a random object from their massive collection on each button click:https://randomrijks.com<HN_SEP>Also see https://public-apis.io for a similar sear
+First time web scraping from a weathercast website	chable listing of APIs.<HN_SEP>Great resource, bookmarked!<HN_SEP>Is this what you are looking for?https://www.programmableweb.com/category/all/apis<HN_SEP>I see no connection between these services. This list seems like a low effort post WatchMojo style.What is the purpose? How does this improve productivity that is mentioned in the submission title?<HN_SEP><div align="center">
+    <h1>Public APIs</h1>
+    <i>A collective list of free APIs for use in software and web development</i>
+</div>
+
+<br />
+
+<div al
+First time web scraping from a weathercast website	ign="center">
+    <sup>Status</sup>
+    <br />
+    <a href="https://github.com/public-apis/public-apis#index">
+        <img alt="Number of Categories" src="https://img.shields.io/badge/dynamic/json?url=https://api.publicapis.org/categories&label=Number%20of%20Categories&query=$.count&color=informational" />
+    </a>
+    <a href="https://github.com/public-apis/public-apis">
+        <img alt="Number of APIs" src="https://img.shields.io/badge/dynamic/json?url=https://api.publicapis.org/entries&label=Number%20o
+Why does restcountries API does not work while my Javascript code is correct	I have used public-apis list multiple times for building. It's sad to see a company taking over a community led project.<HN_SEP>Anyone know of a API to fetch high quality music artist and album art? I've been meaning to make something which sniffs whats playing on my Chromecast and display it on a screen but I've had difficulty finding a good source of art.Thank you for the suggestions :)<HN_SEP>Would be nice to see a column with request limit, if any.<HN_SEP>Anybody know of an API that allows you to genera
+Why does restcountries API does not work while my Javascript code is correct	te a temporary static HTML page with custom markup that I can send to it?<HN_SEP>Does anyone know about an API for getting high resolution book covers? Most of the book covers that are publicly out there are terrible.<HN_SEP>Obligatory link to the Tom Scott video on free APIs.  There's a lot of common knowledge there, but his discussion on free APIs seems relevant.  I've been burned by having hobbyist projects break from free APIs getting turned off.https://youtu.be/BxV14h0kFs0<HN_SEP>https://agify.io/This
+Why does restcountries API does not work while my Javascript code is correct	was in the list. How is this useful at all?<HN_SEP>Nice list. I looked at a few now. But since these are public/free APIs, I would be careful using them into production work, mainly for stability/scale reasons. Good for research/Prototype etc, IMO.<HN_SEP>Nice list! Ive used one of the art APIs listed, the Rijksmuseum one, to built a website which will show you a random object from their massive collection on each button click:https://randomrijks.com<HN_SEP>Also see https://public-apis.io for a similar sear
+Why does restcountries API does not work while my Javascript code is correct	chable listing of APIs.<HN_SEP>Great resource, bookmarked!<HN_SEP>Is this what you are looking for?https://www.programmableweb.com/category/all/apis<HN_SEP>I see no connection between these services. This list seems like a low effort post WatchMojo style.What is the purpose? How does this improve productivity that is mentioned in the submission title?<HN_SEP><div align="center">
+    <h1>Public APIs</h1>
+    <i>A collective list of free APIs for use in software and web development</i>
+</div>
+
+<br />
+
+<div al
+Why does restcountries API does not work while my Javascript code is correct	ign="center">
+    <sup>Status</sup>
+    <br />
+    <a href="https://github.com/public-apis/public-apis#index">
+        <img alt="Number of Categories" src="https://img.shields.io/badge/dynamic/json?url=https://api.publicapis.org/categories&label=Number%20of%20Categories&query=$.count&color=informational" />
+    </a>
+    <a href="https://github.com/public-apis/public-apis">
+        <img alt="Number of APIs" src="https://img.shields.io/badge/dynamic/json?url=https://api.publicapis.org/entries&label=Number%20o
+How to write query strings for API requests	I have used public-apis list multiple times for building. It's sad to see a company taking over a community led project.<HN_SEP>Anyone know of a API to fetch high quality music artist and album art? I've been meaning to make something which sniffs whats playing on my Chromecast and display it on a screen but I've had difficulty finding a good source of art.Thank you for the suggestions :)<HN_SEP>Would be nice to see a column with request limit, if any.<HN_SEP>Anybody know of an API that allows you to genera
+How to write query strings for API requests	te a temporary static HTML page with custom markup that I can send to it?<HN_SEP>Does anyone know about an API for getting high resolution book covers? Most of the book covers that are publicly out there are terrible.<HN_SEP>Obligatory link to the Tom Scott video on free APIs.  There's a lot of common knowledge there, but his discussion on free APIs seems relevant.  I've been burned by having hobbyist projects break from free APIs getting turned off.https://youtu.be/BxV14h0kFs0<HN_SEP>https://agify.io/This
+How to write query strings for API requests	was in the list. How is this useful at all?<HN_SEP>Nice list. I looked at a few now. But since these are public/free APIs, I would be careful using them into production work, mainly for stability/scale reasons. Good for research/Prototype etc, IMO.<HN_SEP>Nice list! Ive used one of the art APIs listed, the Rijksmuseum one, to built a website which will show you a random object from their massive collection on each button click:https://randomrijks.com<HN_SEP>Also see https://public-apis.io for a similar sear
+How to write query strings for API requests	chable listing of APIs.<HN_SEP>Great resource, bookmarked!<HN_SEP>Is this what you are looking for?https://www.programmableweb.com/category/all/apis<HN_SEP>I see no connection between these services. This list seems like a low effort post WatchMojo style.What is the purpose? How does this improve productivity that is mentioned in the submission title?<HN_SEP><div align="center">
+    <h1>Public APIs</h1>
+    <i>A collective list of free APIs for use in software and web development</i>
+</div>
+
+<br />
+
+<div al
+How to write query strings for API requests	ign="center">
+    <sup>Status</sup>
+    <br />
+    <a href="https://github.com/public-apis/public-apis#index">
+        <img alt="Number of Categories" src="https://img.shields.io/badge/dynamic/json?url=https://api.publicapis.org/categories&label=Number%20of%20Categories&query=$.count&color=informational" />
+    </a>
+    <a href="https://github.com/public-apis/public-apis">
+        <img alt="Number of APIs" src="https://img.shields.io/badge/dynamic/json?url=https://api.publicapis.org/entries&label=Number%20o
+Online REST open api, which accepts only String as RequestBody	I have used public-apis list multiple times for building. It's sad to see a company taking over a community led project.<HN_SEP>Anyone know of a API to fetch high quality music artist and album art? I've been meaning to make something which sniffs whats playing on my Chromecast and display it on a screen but I've had difficulty finding a good source of art.Thank you for the suggestions :)<HN_SEP>Would be nice to see a column with request limit, if any.<HN_SEP>Anybody know of an API that allows you to genera
+Online REST open api, which accepts only String as RequestBody	te a temporary static HTML page with custom markup that I can send to it?<HN_SEP>Does anyone know about an API for getting high resolution book covers? Most of the book covers that are publicly out there are terrible.<HN_SEP>Obligatory link to the Tom Scott video on free APIs.  There's a lot of common knowledge there, but his discussion on free APIs seems relevant.  I've been burned by having hobbyist projects break from free APIs getting turned off.https://youtu.be/BxV14h0kFs0<HN_SEP>https://agify.io/This
+Online REST open api, which accepts only String as RequestBody	was in the list. How is this useful at all?<HN_SEP>Nice list. I looked at a few now. But since these are public/free APIs, I would be careful using them into production work, mainly for stability/scale reasons. Good for research/Prototype etc, IMO.<HN_SEP>Nice list! Ive used one of the art APIs listed, the Rijksmuseum one, to built a website which will show you a random object from their massive collection on each button click:https://randomrijks.com<HN_SEP>Also see https://public-apis.io for a similar sear
+Online REST open api, which accepts only String as RequestBody	chable listing of APIs.<HN_SEP>Great resource, bookmarked!<HN_SEP>Is this what you are looking for?https://www.programmableweb.com/category/all/apis<HN_SEP>I see no connection between these services. This list seems like a low effort post WatchMojo style.What is the purpose? How does this improve productivity that is mentioned in the submission title?<HN_SEP><div align="center">
+    <h1>Public APIs</h1>
+    <i>A collective list of free APIs for use in software and web development</i>
+</div>
+
+<br />
+
+<div al
+Online REST open api, which accepts only String as RequestBody	ign="center">
+    <sup>Status</sup>
+    <br />
+    <a href="https://github.com/public-apis/public-apis#index">
+        <img alt="Number of Categories" src="https://img.shields.io/badge/dynamic/json?url=https://api.publicapis.org/categories&label=Number%20of%20Categories&query=$.count&color=informational" />
+    </a>
+    <a href="https://github.com/public-apis/public-apis">
+        <img alt="Number of APIs" src="https://img.shields.io/badge/dynamic/json?url=https://api.publicapis.org/entries&label=Number%20o
+What is senior PHP developer duty about tackling network crashes?	Best thing is, the automated process broke a link to the Hebrew translation repository (from https://github.com/EladLeev/system-design-primer/tree/he-tra... to https://github.com/EladLeev/system-design-primer/tree/they-t...) by replacing "he" with "they".Good job breaking it with an inane search & replace bot! /s<HN_SEP>So GitHub repositories are being harassed by bots that police their language? I assume GitHub is going to ban their IPs. If they dont, its another symptom of their decline.<HN_SEP>Apparently
+What is senior PHP developer duty about tackling network crashes?	the word "sister" is offensive. Use "sibling" instead.<HN_SEP>I'm old and have great difficulty understanding how we got here.<HN_SEP>What could possibly go wrong with changing dependencieshttps://github.com/vuejs/vue/pull/12510/files#diff-5e85e0b2b...<HN_SEP>I'm a member of a large Slack group that has a bot that corrects un-PC language, including any mention of the word "guys."What I find interesting is that the biggest proponents of dynamic language -- the idea that usage evolves over time, such as "the
+What is senior PHP developer duty about tackling network crashes?	y" becoming more common as a singular pronoun -- also tend to treat a word like "guys" as non-gender-inclusive, even though it is extremely common for "guys" to be used in a gender-neutral way when used in the second person.  "You guys" and "Hey guys" are examples of this, and what a lot of people ignore is that women have had a large part in moving these terms in a gender-neutral direction by using these phrase to address other women.<HN_SEP>Past related threads:Learn how to design large-scale systems - ht
+What is senior PHP developer duty about tackling network crashes?	tps://news.ycombinator.com/item?id=17522362 - July 2018 (185 comments)The System Design Primer - https://news.ycombinator.com/item?id=13823979 - March 2017 (57 comments)<HN_SEP>I thought this was going to be about system engineering, but it's just about web scale distributed computing. Disappointing, because I'm digging into systems engineering at the moment and got a bunch of books on it for Christmas, plus thumbing through the SEBoK wiki [1] and associated content.1: https://www.sebokwiki.org/wiki/Guide_t
+What is senior PHP developer duty about tackling network crashes?	o_the_Systems_Engineer...<HN_SEP>It seems like all such resources are about web-scale distributed systems and the content/methods are quite standardized.What about other large-scale systems? E.g. desktop applications - for instance, how to design a large-scale desktop system such as Adobe Photoshop or MS Office.<HN_SEP>More like 'learn how to convince someone that you know how to design large-scale systems'<HN_SEP>I think this is very valuable and helpful.What really matters I think is when you really need
+Where can I find an official source for one-liner command line tools available through pip install?	pip needs a download counter to feed stats necessary to generate this list automatically.<HN_SEP>There's lots of great stuff in the Python community, lots of very mature, high quality packages.As with all ecosystems, there's also rubbish, and there's certainly some rubbish on this list. It would be wrong to name packages, but it makes me question "Awesome X" lists, their intentions, the skill in curation behind them, and their usefulness to newcomers.I would personally not use inclusion on an "Awesome X" li
+Where can I find an official source for one-liner command line tools available through pip install?	st as a signal of quality. The lists have assumed a purely discovery based role for me, which is a shame, because the idea of a curated set of packages or tools for newcomers to an ecosystem is a great one.<HN_SEP>Looks useful but isn't 62k stars a lot?<HN_SEP>I'm not sure I'd call this list curated. It would be nice if it were a bit more opinionated. Where there are multiple libraries in a category it provides no guidance on how to choose one over another. Also, in some of the categories, clear winners exi
+Where can I find an official source for one-liner command line tools available through pip install?	st today. For example in the testing category, just use pytest, and run it with tox.I was going to submit a PR, but the repo has hundreds of PRs and 60 issues already open.So yeah, it's more a Python smrgsbord than a curated list. In the end, I'm not sure it's much better than using a search engine.<HN_SEP>Pytables should be on this list<HN_SEP># Awesome Python [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/sindresorhus/a
+Where can I find an official source for one-liner command line tools available through pip install?	wesome)
+
+A curated list of awesome Python frameworks, libraries, software and resources.
+
+Inspired by [awesome-php](https://github.com/ziadoz/awesome-php).
+
+- [Awesome Python](#awesome-python)
+    - [Admin Panels](#admin-panels)
+    - [Algorithms and Design Patterns](#algorithms-and-design-patterns)
+    - [ASGI Servers](#asgi-servers)
+    - [Asynchronous Programming](#asynchronous-programming)
+    - [Audio](#audio)
+    - [Authentication](#authentication)
+    - [Build Tools](#build-tools)
+    - [Built-in Cla
+Where can I find an official source for one-liner command line tools available through pip install?	sses Enhancement](#built-in-classes-enhancement)
+    - [Caching](#caching)
+    - [ChatOps Tools](#chatops-tools)
+    - [CMS](#cms)
+    - [Code Analysis](#code-analysis)
+    - [Command-line Interface Development](#command-line-interface-development)
+    - [Command-line Tools](#command-line-tools)
+    - [Compatibility](#compatibility)
+    - [Computer Vision](#computer-vision)
+    - [Concurrency and Parallelism](#concurrency-and-parallelism)
+    - [Configuration](#configuration)
+    - [Cryptography](#cryptogra
+Possible to request github JSON file without token	pip needs a download counter to feed stats necessary to generate this list automatically.<HN_SEP>There's lots of great stuff in the Python community, lots of very mature, high quality packages.As with all ecosystems, there's also rubbish, and there's certainly some rubbish on this list. It would be wrong to name packages, but it makes me question "Awesome X" lists, their intentions, the skill in curation behind them, and their usefulness to newcomers.I would personally not use inclusion on an "Awesome X" li
+Possible to request github JSON file without token	st as a signal of quality. The lists have assumed a purely discovery based role for me, which is a shame, because the idea of a curated set of packages or tools for newcomers to an ecosystem is a great one.<HN_SEP>Looks useful but isn't 62k stars a lot?<HN_SEP>I'm not sure I'd call this list curated. It would be nice if it were a bit more opinionated. Where there are multiple libraries in a category it provides no guidance on how to choose one over another. Also, in some of the categories, clear winners exi
+Possible to request github JSON file without token	st today. For example in the testing category, just use pytest, and run it with tox.I was going to submit a PR, but the repo has hundreds of PRs and 60 issues already open.So yeah, it's more a Python smrgsbord than a curated list. In the end, I'm not sure it's much better than using a search engine.<HN_SEP>Pytables should be on this list<HN_SEP># Awesome Python [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/sindresorhus/a
+Possible to request github JSON file without token	wesome)
+
+A curated list of awesome Python frameworks, libraries, software and resources.
+
+Inspired by [awesome-php](https://github.com/ziadoz/awesome-php).
+
+- [Awesome Python](#awesome-python)
+    - [Admin Panels](#admin-panels)
+    - [Algorithms and Design Patterns](#algorithms-and-design-patterns)
+    - [ASGI Servers](#asgi-servers)
+    - [Asynchronous Programming](#asynchronous-programming)
+    - [Audio](#audio)
+    - [Authentication](#authentication)
+    - [Build Tools](#build-tools)
+    - [Built-in Cla
+Possible to request github JSON file without token	sses Enhancement](#built-in-classes-enhancement)
+    - [Caching](#caching)
+    - [ChatOps Tools](#chatops-tools)
+    - [CMS](#cms)
+    - [Code Analysis](#code-analysis)
+    - [Command-line Interface Development](#command-line-interface-development)
+    - [Command-line Tools](#command-line-tools)
+    - [Compatibility](#compatibility)
+    - [Computer Vision](#computer-vision)
+    - [Concurrency and Parallelism](#concurrency-and-parallelism)
+    - [Configuration](#configuration)
+    - [Cryptography](#cryptogra
+Scripting/Parsing Apple Motion 5 .motn files	pip needs a download counter to feed stats necessary to generate this list automatically.<HN_SEP>There's lots of great stuff in the Python community, lots of very mature, high quality packages.As with all ecosystems, there's also rubbish, and there's certainly some rubbish on this list. It would be wrong to name packages, but it makes me question "Awesome X" lists, their intentions, the skill in curation behind them, and their usefulness to newcomers.I would personally not use inclusion on an "Awesome X" li
+Scripting/Parsing Apple Motion 5 .motn files	st as a signal of quality. The lists have assumed a purely discovery based role for me, which is a shame, because the idea of a curated set of packages or tools for newcomers to an ecosystem is a great one.<HN_SEP>Looks useful but isn't 62k stars a lot?<HN_SEP>I'm not sure I'd call this list curated. It would be nice if it were a bit more opinionated. Where there are multiple libraries in a category it provides no guidance on how to choose one over another. Also, in some of the categories, clear winners exi
+Scripting/Parsing Apple Motion 5 .motn files	st today. For example in the testing category, just use pytest, and run it with tox.I was going to submit a PR, but the repo has hundreds of PRs and 60 issues already open.So yeah, it's more a Python smrgsbord than a curated list. In the end, I'm not sure it's much better than using a search engine.<HN_SEP>Pytables should be on this list<HN_SEP># Awesome Python [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/sindresorhus/a
+Scripting/Parsing Apple Motion 5 .motn files	wesome)
+
+A curated list of awesome Python frameworks, libraries, software and resources.
+
+Inspired by [awesome-php](https://github.com/ziadoz/awesome-php).
+
+- [Awesome Python](#awesome-python)
+    - [Admin Panels](#admin-panels)
+    - [Algorithms and Design Patterns](#algorithms-and-design-patterns)
+    - [ASGI Servers](#asgi-servers)
+    - [Asynchronous Programming](#asynchronous-programming)
+    - [Audio](#audio)
+    - [Authentication](#authentication)
+    - [Build Tools](#build-tools)
+    - [Built-in Cla
+Scripting/Parsing Apple Motion 5 .motn files	sses Enhancement](#built-in-classes-enhancement)
+    - [Caching](#caching)
+    - [ChatOps Tools](#chatops-tools)
+    - [CMS](#cms)
+    - [Code Analysis](#code-analysis)
+    - [Command-line Interface Development](#command-line-interface-development)
+    - [Command-line Tools](#command-line-tools)
+    - [Compatibility](#compatibility)
+    - [Computer Vision](#computer-vision)
+    - [Concurrency and Parallelism](#concurrency-and-parallelism)
+    - [Configuration](#configuration)
+    - [Cryptography](#cryptogra
+Good open source django project for learning	pip needs a download counter to feed stats necessary to generate this list automatically.<HN_SEP>There's lots of great stuff in the Python community, lots of very mature, high quality packages.As with all ecosystems, there's also rubbish, and there's certainly some rubbish on this list. It would be wrong to name packages, but it makes me question "Awesome X" lists, their intentions, the skill in curation behind them, and their usefulness to newcomers.I would personally not use inclusion on an "Awesome X" li
+Good open source django project for learning	st as a signal of quality. The lists have assumed a purely discovery based role for me, which is a shame, because the idea of a curated set of packages or tools for newcomers to an ecosystem is a great one.<HN_SEP>Looks useful but isn't 62k stars a lot?<HN_SEP>I'm not sure I'd call this list curated. It would be nice if it were a bit more opinionated. Where there are multiple libraries in a category it provides no guidance on how to choose one over another. Also, in some of the categories, clear winners exi
+Good open source django project for learning	st today. For example in the testing category, just use pytest, and run it with tox.I was going to submit a PR, but the repo has hundreds of PRs and 60 issues already open.So yeah, it's more a Python smrgsbord than a curated list. In the end, I'm not sure it's much better than using a search engine.<HN_SEP>Pytables should be on this list<HN_SEP># Awesome Python [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/sindresorhus/a
+Good open source django project for learning	wesome)
+
+A curated list of awesome Python frameworks, libraries, software and resources.
+
+Inspired by [awesome-php](https://github.com/ziadoz/awesome-php).
+
+- [Awesome Python](#awesome-python)
+    - [Admin Panels](#admin-panels)
+    - [Algorithms and Design Patterns](#algorithms-and-design-patterns)
+    - [ASGI Servers](#asgi-servers)
+    - [Asynchronous Programming](#asynchronous-programming)
+    - [Audio](#audio)
+    - [Authentication](#authentication)
+    - [Build Tools](#build-tools)
+    - [Built-in Cla
+Good open source django project for learning	sses Enhancement](#built-in-classes-enhancement)
+    - [Caching](#caching)
+    - [ChatOps Tools](#chatops-tools)
+    - [CMS](#cms)
+    - [Code Analysis](#code-analysis)
+    - [Command-line Interface Development](#command-line-interface-development)
+    - [Command-line Tools](#command-line-tools)
+    - [Compatibility](#compatibility)
+    - [Computer Vision](#computer-vision)
+    - [Concurrency and Parallelism](#concurrency-and-parallelism)
+    - [Configuration](#configuration)
+    - [Cryptography](#cryptogra
+Update remote forked repository without get it cloned locally from Github	pip needs a download counter to feed stats necessary to generate this list automatically.<HN_SEP>There's lots of great stuff in the Python community, lots of very mature, high quality packages.As with all ecosystems, there's also rubbish, and there's certainly some rubbish on this list. It would be wrong to name packages, but it makes me question "Awesome X" lists, their intentions, the skill in curation behind them, and their usefulness to newcomers.I would personally not use inclusion on an "Awesome X" li
+Update remote forked repository without get it cloned locally from Github	st as a signal of quality. The lists have assumed a purely discovery based role for me, which is a shame, because the idea of a curated set of packages or tools for newcomers to an ecosystem is a great one.<HN_SEP>Looks useful but isn't 62k stars a lot?<HN_SEP>I'm not sure I'd call this list curated. It would be nice if it were a bit more opinionated. Where there are multiple libraries in a category it provides no guidance on how to choose one over another. Also, in some of the categories, clear winners exi
+Update remote forked repository without get it cloned locally from Github	st today. For example in the testing category, just use pytest, and run it with tox.I was going to submit a PR, but the repo has hundreds of PRs and 60 issues already open.So yeah, it's more a Python smrgsbord than a curated list. In the end, I'm not sure it's much better than using a search engine.<HN_SEP>Pytables should be on this list<HN_SEP># Awesome Python [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/sindresorhus/a
+Update remote forked repository without get it cloned locally from Github	wesome)
+
+A curated list of awesome Python frameworks, libraries, software and resources.
+
+Inspired by [awesome-php](https://github.com/ziadoz/awesome-php).
+
+- [Awesome Python](#awesome-python)
+    - [Admin Panels](#admin-panels)
+    - [Algorithms and Design Patterns](#algorithms-and-design-patterns)
+    - [ASGI Servers](#asgi-servers)
+    - [Asynchronous Programming](#asynchronous-programming)
+    - [Audio](#audio)
+    - [Authentication](#authentication)
+    - [Build Tools](#build-tools)
+    - [Built-in Cla
+Update remote forked repository without get it cloned locally from Github	sses Enhancement](#built-in-classes-enhancement)
+    - [Caching](#caching)
+    - [ChatOps Tools](#chatops-tools)
+    - [CMS](#cms)
+    - [Code Analysis](#code-analysis)
+    - [Command-line Interface Development](#command-line-interface-development)
+    - [Command-line Tools](#command-line-tools)
+    - [Compatibility](#compatibility)
+    - [Computer Vision](#computer-vision)
+    - [Concurrency and Parallelism](#concurrency-and-parallelism)
+    - [Configuration](#configuration)
+    - [Cryptography](#cryptogra
+How do you use youtube-dl to download live streams (that are live)?	I wish any of the projects would implement a feature to download parts of a video. Currently that's not possibleRequest is
+open since 2013 https://github.com/ytdl-org/youtube-dl/issues/622<HN_SEP>This is a post about youtube-dl. Why are nearly all the comments about yt-dlp? If I didn't know better, I'd think yt-dlp users have massive inferiority complexes because they never seem to miss an opportunity to attempt to recruit everyone else to be just like them, even shamelessly trolling the announcement. When
+How do you use youtube-dl to download live streams (that are live)?	did this turn into Ford vs. Chevy?<HN_SEP>I'm using yt-dlp, and a very small change really made me go "cool" is 
+Color numbers..I just wish for functions I could pick mid 720p'ish as a setting that includes audio+video, and not have to pick the audio and video formats.  Theres a worst and a best option, but I'd want a middle quality to save space.<HN_SEP>Could someone make a fork please which works for PornHib as well? :D<HN_SEP>Used it today for downloading some of Red Bulls content showing human pushing t
+How do you use youtube-dl to download live streams (that are live)?	heir body to the max. Those base jumpers in flysuits are so crazy I actually think about doing it myself. Flying as a pink elephant in the weekend.<HN_SEP>I would think a great place to see changes would be to go see what yt-dlp has been up to during the time of prior management because it certainly works better currently. Surely it wouldn't be too hard to pull some of those changes over.<HN_SEP>The reason to continue the project and not focus together on the more maintained fork [1] is to keep support for
+How do you use youtube-dl to download live streams (that are live)?	python 2.6 and 3.2?In 2022?For a thing that is made to talk to the internet?Python 2.6.7 was released in 2011.
+Python 2.x overdue EOL was in 2020.
+Python 3.2.6 was released in 2014.That's has to be one of the worst reasons for duplicating efforts ever.[1] https://github.com/yt-dlp/yt-dlp<HN_SEP>Massive thank you to the original author and the original youtube-dl. Wonderful piece of software!However it's been too long - isn't yt-dlp very far ahead and much healthier in it's organization _today_? Also the ins
+How do you use youtube-dl to download live streams (that are live)?	istence of using a dead version of Python is pretty strange and will probably hamstrings the efforts for very minimal gains.<HN_SEP>I think we should thank this maintainer for his great job, he made the internet a better place. I really hope he will now be working on some other project that he finds exciting, either that is painting or writing the next cool app :)Thank you!<HN_SEP>Perhaps an aside but recently using Google assistant to play music tracks from YouTube has mostly stopped working for me. Comman
+How to get the first video from any YouTube channel in new version?	I wish any of the projects would implement a feature to download parts of a video. Currently that's not possibleRequest is
+open since 2013 https://github.com/ytdl-org/youtube-dl/issues/622<HN_SEP>This is a post about youtube-dl. Why are nearly all the comments about yt-dlp? If I didn't know better, I'd think yt-dlp users have massive inferiority complexes because they never seem to miss an opportunity to attempt to recruit everyone else to be just like them, even shamelessly trolling the announcement. When
+How to get the first video from any YouTube channel in new version?	did this turn into Ford vs. Chevy?<HN_SEP>I'm using yt-dlp, and a very small change really made me go "cool" is 
+Color numbers..I just wish for functions I could pick mid 720p'ish as a setting that includes audio+video, and not have to pick the audio and video formats.  Theres a worst and a best option, but I'd want a middle quality to save space.<HN_SEP>Could someone make a fork please which works for PornHib as well? :D<HN_SEP>Used it today for downloading some of Red Bulls content showing human pushing t
+How to get the first video from any YouTube channel in new version?	heir body to the max. Those base jumpers in flysuits are so crazy I actually think about doing it myself. Flying as a pink elephant in the weekend.<HN_SEP>I would think a great place to see changes would be to go see what yt-dlp has been up to during the time of prior management because it certainly works better currently. Surely it wouldn't be too hard to pull some of those changes over.<HN_SEP>The reason to continue the project and not focus together on the more maintained fork [1] is to keep support for
+How to get the first video from any YouTube channel in new version?	python 2.6 and 3.2?In 2022?For a thing that is made to talk to the internet?Python 2.6.7 was released in 2011.
+Python 2.x overdue EOL was in 2020.
+Python 3.2.6 was released in 2014.That's has to be one of the worst reasons for duplicating efforts ever.[1] https://github.com/yt-dlp/yt-dlp<HN_SEP>Massive thank you to the original author and the original youtube-dl. Wonderful piece of software!However it's been too long - isn't yt-dlp very far ahead and much healthier in it's organization _today_? Also the ins
+How to get the first video from any YouTube channel in new version?	istence of using a dead version of Python is pretty strange and will probably hamstrings the efforts for very minimal gains.<HN_SEP>I think we should thank this maintainer for his great job, he made the internet a better place. I really hope he will now be working on some other project that he finds exciting, either that is painting or writing the next cool app :)Thank you!<HN_SEP>Perhaps an aside but recently using Google assistant to play music tracks from YouTube has mostly stopped working for me. Comman
+How to get a youtube video stream	I wish any of the projects would implement a feature to download parts of a video. Currently that's not possibleRequest is
+open since 2013 https://github.com/ytdl-org/youtube-dl/issues/622<HN_SEP>This is a post about youtube-dl. Why are nearly all the comments about yt-dlp? If I didn't know better, I'd think yt-dlp users have massive inferiority complexes because they never seem to miss an opportunity to attempt to recruit everyone else to be just like them, even shamelessly trolling the announcement. When
+How to get a youtube video stream	did this turn into Ford vs. Chevy?<HN_SEP>I'm using yt-dlp, and a very small change really made me go "cool" is 
+Color numbers..I just wish for functions I could pick mid 720p'ish as a setting that includes audio+video, and not have to pick the audio and video formats.  Theres a worst and a best option, but I'd want a middle quality to save space.<HN_SEP>Could someone make a fork please which works for PornHib as well? :D<HN_SEP>Used it today for downloading some of Red Bulls content showing human pushing t
+How to get a youtube video stream	heir body to the max. Those base jumpers in flysuits are so crazy I actually think about doing it myself. Flying as a pink elephant in the weekend.<HN_SEP>I would think a great place to see changes would be to go see what yt-dlp has been up to during the time of prior management because it certainly works better currently. Surely it wouldn't be too hard to pull some of those changes over.<HN_SEP>The reason to continue the project and not focus together on the more maintained fork [1] is to keep support for
+How to get a youtube video stream	python 2.6 and 3.2?In 2022?For a thing that is made to talk to the internet?Python 2.6.7 was released in 2011.
+Python 2.x overdue EOL was in 2020.
+Python 3.2.6 was released in 2014.That's has to be one of the worst reasons for duplicating efforts ever.[1] https://github.com/yt-dlp/yt-dlp<HN_SEP>Massive thank you to the original author and the original youtube-dl. Wonderful piece of software!However it's been too long - isn't yt-dlp very far ahead and much healthier in it's organization _today_? Also the ins
+How to get a youtube video stream	istence of using a dead version of Python is pretty strange and will probably hamstrings the efforts for very minimal gains.<HN_SEP>I think we should thank this maintainer for his great job, he made the internet a better place. I really hope he will now be working on some other project that he finds exciting, either that is painting or writing the next cool app :)Thank you!<HN_SEP>Perhaps an aside but recently using Google assistant to play music tracks from YouTube has mostly stopped working for me. Comman
+Pytube download bytes remaining not accurate/very slow	I wish any of the projects would implement a feature to download parts of a video. Currently that's not possibleRequest is
+open since 2013 https://github.com/ytdl-org/youtube-dl/issues/622<HN_SEP>This is a post about youtube-dl. Why are nearly all the comments about yt-dlp? If I didn't know better, I'd think yt-dlp users have massive inferiority complexes because they never seem to miss an opportunity to attempt to recruit everyone else to be just like them, even shamelessly trolling the announcement. When
+Pytube download bytes remaining not accurate/very slow	did this turn into Ford vs. Chevy?<HN_SEP>I'm using yt-dlp, and a very small change really made me go "cool" is 
+Color numbers..I just wish for functions I could pick mid 720p'ish as a setting that includes audio+video, and not have to pick the audio and video formats.  Theres a worst and a best option, but I'd want a middle quality to save space.<HN_SEP>Could someone make a fork please which works for PornHib as well? :D<HN_SEP>Used it today for downloading some of Red Bulls content showing human pushing t
+Pytube download bytes remaining not accurate/very slow	heir body to the max. Those base jumpers in flysuits are so crazy I actually think about doing it myself. Flying as a pink elephant in the weekend.<HN_SEP>I would think a great place to see changes would be to go see what yt-dlp has been up to during the time of prior management because it certainly works better currently. Surely it wouldn't be too hard to pull some of those changes over.<HN_SEP>The reason to continue the project and not focus together on the more maintained fork [1] is to keep support for
+Pytube download bytes remaining not accurate/very slow	python 2.6 and 3.2?In 2022?For a thing that is made to talk to the internet?Python 2.6.7 was released in 2011.
+Python 2.x overdue EOL was in 2020.
+Python 3.2.6 was released in 2014.That's has to be one of the worst reasons for duplicating efforts ever.[1] https://github.com/yt-dlp/yt-dlp<HN_SEP>Massive thank you to the original author and the original youtube-dl. Wonderful piece of software!However it's been too long - isn't yt-dlp very far ahead and much healthier in it's organization _today_? Also the ins
+Pytube download bytes remaining not accurate/very slow	istence of using a dead version of Python is pretty strange and will probably hamstrings the efforts for very minimal gains.<HN_SEP>I think we should thank this maintainer for his great job, he made the internet a better place. I really hope he will now be working on some other project that he finds exciting, either that is painting or writing the next cool app :)Thank you!<HN_SEP>Perhaps an aside but recently using Google assistant to play music tracks from YouTube has mostly stopped working for me. Comman
+ffmpeg - how to handle video and audio URL&#39;s streams separately?	I wish any of the projects would implement a feature to download parts of a video. Currently that's not possibleRequest is
+open since 2013 https://github.com/ytdl-org/youtube-dl/issues/622<HN_SEP>This is a post about youtube-dl. Why are nearly all the comments about yt-dlp? If I didn't know better, I'd think yt-dlp users have massive inferiority complexes because they never seem to miss an opportunity to attempt to recruit everyone else to be just like them, even shamelessly trolling the announcement. When
+ffmpeg - how to handle video and audio URL&#39;s streams separately?	did this turn into Ford vs. Chevy?<HN_SEP>I'm using yt-dlp, and a very small change really made me go "cool" is 
+Color numbers..I just wish for functions I could pick mid 720p'ish as a setting that includes audio+video, and not have to pick the audio and video formats.  Theres a worst and a best option, but I'd want a middle quality to save space.<HN_SEP>Could someone make a fork please which works for PornHib as well? :D<HN_SEP>Used it today for downloading some of Red Bulls content showing human pushing t
+ffmpeg - how to handle video and audio URL&#39;s streams separately?	heir body to the max. Those base jumpers in flysuits are so crazy I actually think about doing it myself. Flying as a pink elephant in the weekend.<HN_SEP>I would think a great place to see changes would be to go see what yt-dlp has been up to during the time of prior management because it certainly works better currently. Surely it wouldn't be too hard to pull some of those changes over.<HN_SEP>The reason to continue the project and not focus together on the more maintained fork [1] is to keep support for
+ffmpeg - how to handle video and audio URL&#39;s streams separately?	python 2.6 and 3.2?In 2022?For a thing that is made to talk to the internet?Python 2.6.7 was released in 2011.
+Python 2.x overdue EOL was in 2020.
+Python 3.2.6 was released in 2014.That's has to be one of the worst reasons for duplicating efforts ever.[1] https://github.com/yt-dlp/yt-dlp<HN_SEP>Massive thank you to the original author and the original youtube-dl. Wonderful piece of software!However it's been too long - isn't yt-dlp very far ahead and much healthier in it's organization _today_? Also the ins
+ffmpeg - how to handle video and audio URL&#39;s streams separately?	istence of using a dead version of Python is pretty strange and will probably hamstrings the efforts for very minimal gains.<HN_SEP>I think we should thank this maintainer for his great job, he made the internet a better place. I really hope he will now be working on some other project that he finds exciting, either that is painting or writing the next cool app :)Thank you!<HN_SEP>Perhaps an aside but recently using Google assistant to play music tracks from YouTube has mostly stopped working for me. Comman
+Restoring model checkpoint and increasing number of classes	The new RTX 4xxx generation still has the same amount of VRAM, so I don't know how it would help you that much.<HN_SEP>> 42 images (maximum I can fit on my GPU with 24Gb memory)Probably I'm completely wrong, but surely scaling down those images, at least for the initial iterations, will reduce noise, and give you vastly better batches and faster iteration leading to better training -- then as it converges you would crank up the resolutionNote that scaling doesn't have to be cubic, there are algorithms that
+Restoring model checkpoint and increasing number of classes	crop less 'meaningful' pixels; giving you smaller files with the same resolution<HN_SEP>No one is saying games don't need bigger GPUs is this post some sort of bait?Also Nvidia would probably go more into custom accelerators (tensor cores) as whole industry is moving more towards bigger VRAM and more tf32/bf16 units for AI training over standard fp32 gaming workflow and that's isn't focus of RTX class gaming cards.And 4090/3090/2080ti is old Titan class card for prosumers mostly focused on 3d rendering/vide
+Restoring model checkpoint and increasing number of classes	o editing etc. and also gaming for AI pros they are milking sweet money out of quadro lineup.If you are rly limited by VRAM you should just go fully TPU not wait for some magic consumer VRAM increase as it won't happen for a few years probably (most games in 4k can't utilise 16gb.)<HN_SEP>Where did you get your 90% for ML stat from? I suspect you just made it up becuase it just happens to fit what you experience personally.I work with software for virtual studios. It's very similar to gaming in a lot of way
+Restoring model checkpoint and increasing number of classes	s (even using Unreal Engine) and we really push GPUs to the limits. I'd still count this in the "for gaming" category as we;re still rendering 3D scene within a strict time limit.<HN_SEP>Your premise is not true. Gaming at high resolutions with high frame rates and full settings required powerful GPUs. VR especially demands high frame frame rates to remain immersive while also rendering the scene twice (each eye has a different perspective).We actually have a long way to go before GPUs can really support fu
+Restoring model checkpoint and increasing number of classes	lly immersive VR. The new 4090 is just barely enough to handle some racing sims like ACC in VR at high resolution and settings.Even 3000 series cards couldnt deliver playable frame rates at 4K with all of the graphical eye candy turned on (RayTracing, etc.) in games like Cyberpunk 2077.  As with all games, you can simply play with lower settings and lower resolutions, but the full experience at 4K really does require something like a 4080 or 4090.And of course, next generation games are being built to take
+Installing tensorflow object_detection api in a repo in google drive	The new RTX 4xxx generation still has the same amount of VRAM, so I don't know how it would help you that much.<HN_SEP>> 42 images (maximum I can fit on my GPU with 24Gb memory)Probably I'm completely wrong, but surely scaling down those images, at least for the initial iterations, will reduce noise, and give you vastly better batches and faster iteration leading to better training -- then as it converges you would crank up the resolutionNote that scaling doesn't have to be cubic, there are algorithms that
+Installing tensorflow object_detection api in a repo in google drive	crop less 'meaningful' pixels; giving you smaller files with the same resolution<HN_SEP>No one is saying games don't need bigger GPUs is this post some sort of bait?Also Nvidia would probably go more into custom accelerators (tensor cores) as whole industry is moving more towards bigger VRAM and more tf32/bf16 units for AI training over standard fp32 gaming workflow and that's isn't focus of RTX class gaming cards.And 4090/3090/2080ti is old Titan class card for prosumers mostly focused on 3d rendering/vide
+Installing tensorflow object_detection api in a repo in google drive	o editing etc. and also gaming for AI pros they are milking sweet money out of quadro lineup.If you are rly limited by VRAM you should just go fully TPU not wait for some magic consumer VRAM increase as it won't happen for a few years probably (most games in 4k can't utilise 16gb.)<HN_SEP>Where did you get your 90% for ML stat from? I suspect you just made it up becuase it just happens to fit what you experience personally.I work with software for virtual studios. It's very similar to gaming in a lot of way
+Installing tensorflow object_detection api in a repo in google drive	s (even using Unreal Engine) and we really push GPUs to the limits. I'd still count this in the "for gaming" category as we;re still rendering 3D scene within a strict time limit.<HN_SEP>Your premise is not true. Gaming at high resolutions with high frame rates and full settings required powerful GPUs. VR especially demands high frame frame rates to remain immersive while also rendering the scene twice (each eye has a different perspective).We actually have a long way to go before GPUs can really support fu
+Installing tensorflow object_detection api in a repo in google drive	lly immersive VR. The new 4090 is just barely enough to handle some racing sims like ACC in VR at high resolution and settings.Even 3000 series cards couldnt deliver playable frame rates at 4K with all of the graphical eye candy turned on (RayTracing, etc.) in games like Cyberpunk 2077.  As with all games, you can simply play with lower settings and lower resolutions, but the full experience at 4K really does require something like a 4080 or 4090.And of course, next generation games are being built to take
+Pre-training BERT - `cls_token_idx`	The new RTX 4xxx generation still has the same amount of VRAM, so I don't know how it would help you that much.<HN_SEP>> 42 images (maximum I can fit on my GPU with 24Gb memory)Probably I'm completely wrong, but surely scaling down those images, at least for the initial iterations, will reduce noise, and give you vastly better batches and faster iteration leading to better training -- then as it converges you would crank up the resolutionNote that scaling doesn't have to be cubic, there are algorithms that
+Pre-training BERT - `cls_token_idx`	crop less 'meaningful' pixels; giving you smaller files with the same resolution<HN_SEP>No one is saying games don't need bigger GPUs is this post some sort of bait?Also Nvidia would probably go more into custom accelerators (tensor cores) as whole industry is moving more towards bigger VRAM and more tf32/bf16 units for AI training over standard fp32 gaming workflow and that's isn't focus of RTX class gaming cards.And 4090/3090/2080ti is old Titan class card for prosumers mostly focused on 3d rendering/vide
+Pre-training BERT - `cls_token_idx`	o editing etc. and also gaming for AI pros they are milking sweet money out of quadro lineup.If you are rly limited by VRAM you should just go fully TPU not wait for some magic consumer VRAM increase as it won't happen for a few years probably (most games in 4k can't utilise 16gb.)<HN_SEP>Where did you get your 90% for ML stat from? I suspect you just made it up becuase it just happens to fit what you experience personally.I work with software for virtual studios. It's very similar to gaming in a lot of way
+Pre-training BERT - `cls_token_idx`	s (even using Unreal Engine) and we really push GPUs to the limits. I'd still count this in the "for gaming" category as we;re still rendering 3D scene within a strict time limit.<HN_SEP>Your premise is not true. Gaming at high resolutions with high frame rates and full settings required powerful GPUs. VR especially demands high frame frame rates to remain immersive while also rendering the scene twice (each eye has a different perspective).We actually have a long way to go before GPUs can really support fu
+Pre-training BERT - `cls_token_idx`	lly immersive VR. The new 4090 is just barely enough to handle some racing sims like ACC in VR at high resolution and settings.Even 3000 series cards couldnt deliver playable frame rates at 4K with all of the graphical eye candy turned on (RayTracing, etc.) in games like Cyberpunk 2077.  As with all games, you can simply play with lower settings and lower resolutions, but the full experience at 4K really does require something like a 4080 or 4090.And of course, next generation games are being built to take
+AttributeError: module &#39;keras.api._v2.keras.optimizers&#39; has no attribute &#39;experimental&#39; problem	The new RTX 4xxx generation still has the same amount of VRAM, so I don't know how it would help you that much.<HN_SEP>> 42 images (maximum I can fit on my GPU with 24Gb memory)Probably I'm completely wrong, but surely scaling down those images, at least for the initial iterations, will reduce noise, and give you vastly better batches and faster iteration leading to better training -- then as it converges you would crank up the resolutionNote that scaling doesn't have to be cubic, there are algorithms that
+AttributeError: module &#39;keras.api._v2.keras.optimizers&#39; has no attribute &#39;experimental&#39; problem	crop less 'meaningful' pixels; giving you smaller files with the same resolution<HN_SEP>No one is saying games don't need bigger GPUs is this post some sort of bait?Also Nvidia would probably go more into custom accelerators (tensor cores) as whole industry is moving more towards bigger VRAM and more tf32/bf16 units for AI training over standard fp32 gaming workflow and that's isn't focus of RTX class gaming cards.And 4090/3090/2080ti is old Titan class card for prosumers mostly focused on 3d rendering/vide
+AttributeError: module &#39;keras.api._v2.keras.optimizers&#39; has no attribute &#39;experimental&#39; problem	o editing etc. and also gaming for AI pros they are milking sweet money out of quadro lineup.If you are rly limited by VRAM you should just go fully TPU not wait for some magic consumer VRAM increase as it won't happen for a few years probably (most games in 4k can't utilise 16gb.)<HN_SEP>Where did you get your 90% for ML stat from? I suspect you just made it up becuase it just happens to fit what you experience personally.I work with software for virtual studios. It's very similar to gaming in a lot of way
+AttributeError: module &#39;keras.api._v2.keras.optimizers&#39; has no attribute &#39;experimental&#39; problem	s (even using Unreal Engine) and we really push GPUs to the limits. I'd still count this in the "for gaming" category as we;re still rendering 3D scene within a strict time limit.<HN_SEP>Your premise is not true. Gaming at high resolutions with high frame rates and full settings required powerful GPUs. VR especially demands high frame frame rates to remain immersive while also rendering the scene twice (each eye has a different perspective).We actually have a long way to go before GPUs can really support fu
+AttributeError: module &#39;keras.api._v2.keras.optimizers&#39; has no attribute &#39;experimental&#39; problem	lly immersive VR. The new 4090 is just barely enough to handle some racing sims like ACC in VR at high resolution and settings.Even 3000 series cards couldnt deliver playable frame rates at 4K with all of the graphical eye candy turned on (RayTracing, etc.) in games like Cyberpunk 2077.  As with all games, you can simply play with lower settings and lower resolutions, but the full experience at 4K really does require something like a 4080 or 4090.And of course, next generation games are being built to take
