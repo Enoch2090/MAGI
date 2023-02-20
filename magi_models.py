@@ -7,7 +7,7 @@ from sentence_transformers import SentenceTransformer, models, datasets, losses,
 from dataclasses import dataclass
 from pathlib import Path
 from datetime import datetime
-
+from typing import Union
 from dataset import FineTuneDataGenerationConfig, generate_finetune_data
 from indexers import benchmark_model, inspect_model, cache_embeddings
 
@@ -94,7 +94,7 @@ def train_model(model: nn.Module, config: SentenceBertTrainConfig) -> nn.Module:
 
 def entry( 
     train: bool = True,
-    corpus: str = None,
+    corpus: list = None,
     langs: list = ['Python', 'JavaScript', 'C++'],
     query_data: str = None,
     model_name: str = None,

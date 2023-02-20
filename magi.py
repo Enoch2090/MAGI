@@ -8,21 +8,21 @@ import random
 import logging
 import requests
 from tqdm import tqdm, trange
-# from magi_models import *
+from magi_models import *
 from dataset import *
 from indexers import *
+from magi_configs import MagiProductionConfig
 logging.basicConfig()
 logger = logging.getLogger('MAGI_interface')
 logger.setLevel(logging.INFO)
-
-GH_TOKEN = ''
-LANGS = ['Python', 'JavaScript', 'C++']
 
 st.set_page_config(
    page_title='MAGI',
    page_icon='🗃',
    initial_sidebar_state='expanded',
 )
+
+config = MagiProductionConfig()
 
 # ----------------Functionalities----------------
 def render_html(html):
@@ -49,22 +49,26 @@ class CachedDataset(GitHubCorpusRawTextDataset): pass
 @st.experimental_singleton
 class CachedIndexer: 
     def __init__(self, _dataset, _model):
-        self.indexer = MagiIndexer(_dataset, _model, embedding_file='./datafile/msmarco-distilbert-base-dot-prod-v3_ghv7.pkl')
+        self.indexer = MagiIndexer(_dataset, _model, embedding_file=config.embedding_file)
     def search(self, *args, **kwargs):
         return self.indexer.search(*args, **kwargs)
     
 @st.experimental_memo
 def get_model():
-    # return get_distilbert_base_dotprod('Enoch2090/MAGI')
-    model = ProductionModel(os.getenv('HUGGINGFACE_TOKEN'))
-    print(model.headers)
+    if config.device in ['cuda', 'cpu']:
+        return get_distilbert_base_dotprod('Enoch2090/MAGI').to(config.device)
+    elif config.device == 'hf':
+        model = ProductionModel(os.getenv('HUGGINGFACE_TOKEN'))
+        print(model.headers)
     return model
 
 @st.experimental_memo
-def get_sample_queries():
+def get_sample_queries(lang=None):
     samples = []
     with open('./datafile/queries.txt', 'r') as f:
         queries = json.load(f)
+        if lang:
+            return [(x[0].capitalize(), lang) for x in queries[lang]]
         for lang in queries.keys():
             samples += [(x[0].capitalize(), lang) for x in queries[lang]]
     return samples
@@ -91,12 +95,12 @@ def run_query(query, lang):
                 my_bar.progress(percent_complete + 3)
         
 # ----------------Options----------------
-def option_query(samples):
+def option_query(sample_dict):
     st.title("Search for a package")
     query = st.text_input('Enter query', help='Describe what functionality you are looking for', max_chars=2048)
     lang = st.selectbox(
         'Search in language...',
-        tuple(LANGS)
+        tuple(config.langs)
     )
     col1, col2 = st.columns(2)
     with col1:
@@ -106,7 +110,7 @@ def option_query(samples):
     if search:
         run_query(query, lang)
     elif lucky:
-        sample = random.sample(samples, 1)[0]
+        sample = random.sample(sample_dict[lang], 1)[0]
         run_query(*sample)
     gc.collect()
     return
@@ -123,17 +127,16 @@ option = st.sidebar.selectbox(
             'Menu',
             ['Query', 'About']
         )
-if not os.path.exists('./datafile/ghv7_transformed.json'):
-    get_corpus('https://huggingface.co/datasets/Enoch2090/github_semantic_search/resolve/main/ghv7_transformed.json')
 datasets = [
-    CachedDataset('./datafile/ghv7_transformed.json', lang=lang, chunk_size=1024, max_num=4) for lang in LANGS
+    CachedDataset(c, lang=lang, chunk_size=1024, max_num=4) for c, lang in zip(config.lang_corpus, config.langs)
 ]
 model = get_model()
 indexer = CachedIndexer(datasets, model)
-samples = get_sample_queries()
+# samples = get_sample_queries()
+sample_dict = {lang: get_sample_queries(lang) for lang in config.langs}
 
 if option == 'Query':
-    option_query(samples)
+    option_query(sample_dict)
 elif option == 'About':
     option_about()
 

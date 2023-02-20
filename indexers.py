@@ -232,12 +232,15 @@ def benchmark_model(
 
 def cache_embeddings(
     model, 
-    corpus: str, 
+    corpus: Union[str, list], 
     cache_loc: str, 
     langs: list = ['Python']
 ) -> None:
+    if type(corpus) is str:
+        corpus = [corpus] * len(langs)
+    # print(corpus, type(corpus), type(corpus[0]))
     datasets = [
-        GitHubCorpusRawTextDataset(corpus, lang=lang, chunk_size=1024, max_num=4) for lang in langs
+        GitHubCorpusRawTextDataset(c, lang=lang, chunk_size=1024, max_num=4) for c, lang in zip(corpus, langs)
     ]
     logger.info(f'Caching languages: {langs}, lens={[len(d) for d in datasets]}')
     mg = MagiIndexer(datasets, model)
