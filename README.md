@@ -53,7 +53,7 @@ This mode is used to inspect the efficiency of models via the mAP metric, given 
 
 Cache only:
 ```bash
-python3 magi_models.py --corpus default --train False --load_from Enoch2090/MAGI --benchmark False --inspection False --cache True --cache_loc ./datafile/msmarco-distilbert-base-dot-prod-v3_ghv7.pkl
+python3 magi_models.py --corpus "[\"python-latest\",\"javascript-latest\",\"cpp-latest\",\"rust-latest\",\"go-latest\"]" --langs [Python,JavaScript,\"C++\",Rust,Go] --train False --load_from Enoch2090/MAGI --benchmark False --inspection False --cache True --cache_loc ./datafile/MAGI_ghv10.pkl
 ```
 This mode is used when training is complete. Use this mode to convert the database into embeddings and cache into a .pkl file.
 

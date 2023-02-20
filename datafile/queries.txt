@@ -1,180 +1,317 @@
 {
     "Python": [
-      [
-        "python easy cli interface",
         [
-          "google/python-fire",
-          "chriskiehl/Gooey",
-          "pallets/click",
-          "tiangolo/typer"
-        ]
-      ],
-      [
-        "python web archiving service",
+            "python easy cli interface",
+            [
+                "google/python-fire",
+                "chriskiehl/Gooey",
+                "pallets/click",
+                "tiangolo/typer"
+            ]
+        ],
         [
-          "ArchiveBox/ArchiveBox",
-          "webrecorder/pywb"
-        ]
-      ],
-      [
-        "python find the slowest part of a Python program",
+            "python web archiving service",
+            [
+                "ArchiveBox/ArchiveBox",
+                "webrecorder/pywb"
+            ]
+        ],
         [
-          "joerick/pyinstrument"
-        ]
-      ],
-      [
-        "python proxy pool maintainer",
+            "python find the slowest part of a Python program",
+            [
+                "joerick/pyinstrument"
+            ]
+        ],
         [
-          "jhao104/proxy_pool",
-          "SpiderClub/haipproxy",
-          "Python3WebSpider/ProxyPool"
-        ]
-      ],
-      [
-        "python trading framework",
+            "python proxy pool maintainer",
+            [
+                "jhao104/proxy_pool",
+                "SpiderClub/haipproxy",
+                "Python3WebSpider/ProxyPool"
+            ]
+        ],
         [
-          "ranaroussi/yfinance",
-          "sammchardy/python-binance",
-          "waditu/tushare",
-          "ricequant/rqalpha",
-          "amor71/LiuAlgoTrader",
-          "quantopian/zipline",
-          "jesse-ai/jesse",
-          "tensortrade-org/tensortrade",
-          "edeng23/binance-trade-bot",
-          "QUANTAXIS/QUANTAXIS",
-          "vnpy/vnpy"
-        ]
-      ],
-      [
-        "python extract articles from webpages",
+            "python trading framework",
+            [
+                "ranaroussi/yfinance",
+                "sammchardy/python-binance",
+                "waditu/tushare",
+                "ricequant/rqalpha",
+                "amor71/LiuAlgoTrader",
+                "quantopian/zipline",
+                "jesse-ai/jesse",
+                "tensortrade-org/tensortrade",
+                "edeng23/binance-trade-bot",
+                "QUANTAXIS/QUANTAXIS",
+                "vnpy/vnpy"
+            ]
+        ],
         [
-          "codelucas/newspaper"
-        ]
-      ],
-      [
-        "python object detection models",
+            "python extract articles from webpages",
+            [
+                "codelucas/newspaper"
+            ]
+        ],
         [
-          "facebookresearch/Detectron",
-          "open-mmlab/mmdetection",
-          "PaddlePaddle/PaddleDetection"
-        ]
-      ],
-      [
-        "python dataset augmentation toolbox",
+            "python object detection models",
+            [
+                "facebookresearch/Detectron",
+                "open-mmlab/mmdetection",
+                "PaddlePaddle/PaddleDetection"
+            ]
+        ],
         [
-          "facebookresearch/AugLy",
-          "albumentations-team/albumentations",
-          "aleju/imgaug"
-        ]
-      ],
-      [
-        "numpy machine learning algorithms implementation",
+            "python dataset augmentation toolbox",
+            [
+                "facebookresearch/AugLy",
+                "albumentations-team/albumentations",
+                "aleju/imgaug"
+            ]
+        ],
         [
-          "eriklindernoren/ML-From-Scratch",
-          "ddbourgin/numpy-ml"
-        ]
-      ],
-      [
-        "python semantic search framework",
+            "numpy machine learning algorithms implementation",
+            [
+                "eriklindernoren/ML-From-Scratch",
+                "ddbourgin/numpy-ml"
+            ]
+        ],
         [
-          "deepset-ai/haystack",
-          "facebookresearch/DrQA",
-          "jina-ai/jina"
-        ]
-      ],
-      [
-        "natural sorting in Python",
+            "python semantic search framework",
+            [
+                "deepset-ai/haystack",
+                "facebookresearch/DrQA",
+                "jina-ai/jina"
+            ]
+        ],
         [
-          "SethMMorton/natsort"
-        ]
-      ],
-      [
-        "python word cloud genereation",
+            "natural sorting in Python",
+            [
+                "SethMMorton/natsort"
+            ]
+        ],
         [
-          "amueller/word_cloud"
-        ]
-      ],
-      [
-        "python terminal formatting tool",
+            "python word cloud genereation",
+            [
+                "amueller/word_cloud"
+            ]
+        ],
         [
-          "vinayak-mehta/present",
-          "prompt-toolkit/python-prompt-toolkit",
-          "Textualize/textual",
-          "Textualize/rich"
-        ]
-      ],
-      [
-        "python send notifications to mobile phone",
+            "python terminal formatting tool",
+            [
+                "vinayak-mehta/present",
+                "prompt-toolkit/python-prompt-toolkit",
+                "Textualize/textual",
+                "Textualize/rich"
+            ]
+        ],
         [
-          "rbrcsk/pushbullet.py",
-          "dschep/ntfy",
-          "caronc/apprise",
-          "rahiel/telegram-send",
-          "LonamiWebs/Telethon"
-        ]
-      ],
-      [
-        "python perform ocr on files",
+            "python send notifications to mobile phone",
+            [
+                "rbrcsk/pushbullet.py",
+                "dschep/ntfy",
+                "caronc/apprise",
+                "rahiel/telegram-send",
+                "LonamiWebs/Telethon"
+            ]
+        ],
         [
-          "madmaze/pytesseract",
-          "JaidedAI/EasyOCR",
-          "PaddlePaddle/PaddleOCR",
-          "ocrmypdf/OCRmyPDF",
-          "Psarpei/Multi-Type-TD-TSR"
-        ]
-      ],
-      [
-        "python create gui apps",
+            "python perform ocr on files",
+            [
+                "madmaze/pytesseract",
+                "JaidedAI/EasyOCR",
+                "PaddlePaddle/PaddleOCR",
+                "ocrmypdf/OCRmyPDF",
+                "Psarpei/Multi-Type-TD-TSR"
+            ]
+        ],
         [
-          "ParthJadhav/Tkinter-Designer",
-          "pyqt/examples",
-          "wxWidgets/Phoenix",
-          "ChrisKnott/Eel"
-        ]
-      ],
-      [
-        "python jupyter notebook tools",
+            "python create gui apps",
+            [
+                "ParthJadhav/Tkinter-Designer",
+                "pyqt/examples",
+                "wxWidgets/Phoenix",
+                "ChrisKnott/Eel"
+            ]
+        ],
         [
-          "jupyter/jupyter",
-          "jupyterhub/jupyterhub",
-          "mwouts/jupytext",
-          "aws-samples/sagemaker-run-notebook",
-          "nteract/papermill"
-        ]
-      ],
-      [
-        "python efficient NLP package",
+            "python jupyter notebook tools",
+            [
+                "jupyter/jupyter",
+                "jupyterhub/jupyterhub",
+                "mwouts/jupytext",
+                "aws-samples/sagemaker-run-notebook",
+                "nteract/papermill"
+            ]
+        ],
         [
-          "nltk/nltk",
-          "explosion/spaCy",
-          "RaRe-Technologies/gensim",
-          "stanfordnlp/stanza",
-          "fighting41love/funNLP",
-          "flairNLP/flair",
-          "sloria/TextBlob",
-          "plasticityai/magnitude"
-        ]
-      ],
-      [
-        "python deploy machine learning models",
+            "python efficient NLP package",
+            [
+                "nltk/nltk",
+                "explosion/spaCy",
+                "RaRe-Technologies/gensim",
+                "stanfordnlp/stanza",
+                "fighting41love/funNLP",
+                "flairNLP/flair",
+                "sloria/TextBlob",
+                "plasticityai/magnitude"
+            ]
+        ],
         [
-          "streamlit/streamlit",
-          "gradio-app/gradio",
-          "aws/sagemaker-python-sdk",
-          "nline-ml/chantilly"
-        ]
-      ],
-      [
-        "python audio processing",
+            "python deploy machine learning models",
+            [
+                "streamlit/streamlit",
+                "gradio-app/gradio",
+                "aws/sagemaker-python-sdk",
+                "nline-ml/chantilly"
+            ]
+        ],
         [
-          "librosa/librosa",
-          "pytorch/audio",
-          "worldveil/dejavu",
-          "tyiannak/pyAudioAnalysis",
-          "danilobellini/audiolazy",
-          "fgnt/paderbox"
+            "python audio processing",
+            [
+                "librosa/librosa",
+                "pytorch/audio",
+                "worldveil/dejavu",
+                "tyiannak/pyAudioAnalysis",
+                "danilobellini/audiolazy",
+                "fgnt/paderbox"
+            ]
         ]
-      ]
+    ],
+    "JavaScript": [
+        [
+            "modern Web frontend framework",
+            [
+                "facebook/react",
+                "vuejs/vue",
+                "angular/angular",
+                "sveltejs/svelte"
+            ]
+        ],
+        [
+            "data visualization javascript library",
+            [
+                "d3/d3",
+                "apache/echarts",
+                "antvis/G6",
+                "grafana/grafana"
+            ]
+        ],
+        [
+            "monitoring system",
+            [
+                "prometheus/prometheus",
+                "dianping/cat",
+                "zabbix/zabbix"
+            ]
+        ],
+        [
+            "Vue UI Library",
+            [
+                "element-plus/element-plus",
+                "vuetifyjs/vuetify",
+                "tusen-ai/naive-ui",
+                "iview/iview"
+            ]
+        ],
+        [
+            "node.js web application framework",
+            [
+                "expressjs/express",
+                "koajs/koa",
+                "eggjs/egg",
+                "nestjs/nest"
+            ]
+        ],
+        [
+            "javascript date utility library",
+            [
+                "date-fns/date-fns",
+                "moment/moment"
+            ]
+        ],
+        [
+            "javascript utility library",
+            [
+                "lodash/lodash",
+                "jashkenas/underscore",
+                "dtao/lazy.js"
+            ]
+        ],
+        [
+            "javascript bundler",
+            [
+                "webpack/webpack",
+                "rollup/rollup",
+                "evanw/esbuild"
+            ]
+        ],
+        [
+            "CSS extension language",
+            [
+                "sass/sass",
+                "less/less.js"
+            ]
+        ],
+        [
+            "javascript with typings",
+            [
+                "facebook/flow",
+                "microsoft/TypeScript"
+            ]
+        ],
+        [
+            "javascript runtime",
+            [
+                "noejs/node",
+                "denoland/deno",
+                "v8/v8"
+            ]
+        ]
+    ],
+    "C++": [
+        [
+            "",
+            [
+                "", ""
+            ]
+        ]
+    ],
+    "Go": [
+        [
+            "golang easy cli interface",
+            [
+                "spf13/cobra",
+                "urfave/cli",
+                "cristalhq/acmd",
+                "akamensky/argparse"
+            ]
+        ],
+        [
+            "golang logging framework",
+            [
+                "sirupsen/logrus",
+                "rs/zerolog",
+                "golang/glog",
+                "apex/log",
+                "uber-go/zap"
+            ]
+        ],
+        [
+            "golang web framework",
+            [
+                "gin-gonic/gin",
+                "gofiber/fiber",
+                "labstack/echo",
+                "gorilla/mux"
+            ]
+        ]
+    ],
+     "Rust": [
+        [
+            "",
+            [
+                "", ""
+            ]
+        ]
     ]
 }
