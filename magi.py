@@ -1,3 +1,4 @@
+from turtle import onclick
 import streamlit as st
 import os
 import sys
@@ -17,8 +18,11 @@ from indexers import *
 from datetime import datetime
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import bulk
+from enum import Enum
 
 from magi_configs import MagiProductionConfig
+
+
 logging.basicConfig()
 logger = logging.getLogger('MAGI_interface')
 logger.setLevel(logging.INFO)
@@ -31,6 +35,7 @@ st.set_page_config(
 )
 
 config = MagiProductionConfig()
+
 
 # ----------------Functionalities----------------
 def render_html(html):
@@ -93,8 +98,9 @@ def get_interaction_dict(item_id, ranking_id):
 
 def callback_save_interaction(item_id):
     interaction_dict = get_interaction_dict(item_id, st.session_state['ranking_id'])
-    with open('magi_interactions.jsonl', 'w+') as f:
+    with open('magi_interactions.jsonl', 'a') as f:
         f.write(json.dumps(interaction_dict))
+        f.write('\n')
 
 @st.experimental_singleton
 class CachedDataset(GitHubCorpusRawTextDataset): pass
@@ -130,42 +136,47 @@ def get_sample_queries(lang=None):
     return samples
 
 def display_results(results):
-    st.markdown('''<hr style="height:2px;border:none;color:#CCC;background-color:#CCC;" />''', unsafe_allow_html=True)
-    for result in results:
-        col1, col2 = st.columns(2)
+    st.session_state['app_state'] = 'WAIT'
+    if st.button('Return'):
+        st.session_state['app_state'] = 'STANDBY'
+        st.session_state['latest_results'] = None
+        st.experimental_rerun()
+    st.markdown(f'Results for "{st.session_state["latest_query"]["query"]}" in `{st.session_state["latest_query"]["lang"]}`')
+    st.markdown('''<hr style="height:1.5px;border:none;color:#CCC;background-color:#CCC;" />''', unsafe_allow_html=True)
+    for index, result in enumerate(results):
+        col1, col2 = st.columns([1, 20], gap = 'medium')
         with col1:
-            st.markdown(f'🗂  [{result[0]}]({result[1]})')
+            st.button(label = '▲', key = f'upvote-{index}', on_click = callback_save_interaction, args = [result[6]])
         with col2:
-            st.button(label='⬆︎', key=str(result[6]), on_click=callback_save_interaction, args=[result[6]])
+            st.markdown(f'[**{result[0]}**]({result[1]})')
         st.markdown(f'⭐️  {result[2]} | {result[3]}')
-        st.markdown('''<hr style="height:2px;border:none;color:#CCC;background-color:#CCC;" />''', unsafe_allow_html=True)
-        
+        st.markdown('''<hr style="height:1.5px;border:none;color:#CCC;background-color:#CCC;" />''', unsafe_allow_html=True)
 
 def run_query(query, lang):
     lang_safe = lang.lower().replace('++', 'pp')
     try:
         with st.spinner("Querying..."):
-            st.markdown(f'Results for "{query}" in `{lang}`')
             sim_results, retrieve_time = indexer.search(query, lang=lang, rank=10)
             es_resp = es.search(
-                index=f'{lang_safe}-index',
-                body={
-                    'query': {
-                        'match' : {
-                            'readme': query
-                        }
-                    },            
+                index = f'{lang_safe}-index',
+                query = {
+                    'match' : {
+                        'readme': query
+                    }
                 }
             )
             es_results = [(x['_source']['name'], x['_source']['link'], x['_source']['stars'], x['_source']['description'], float(x['_score']), 'bm25', x['_id']) for x in es_resp.body['hits']['hits']]
             results = interleave_rerank(sim_results, es_results)
             ranking_dict = get_ranking_dict(results)
-            from pprint import pprint
-            pprint(ranking_dict)
-            with open('magi_interactions.jsonl', 'w+') as f:
+            with open('magi_interactions.jsonl', 'a') as f:
                 f.write(json.dumps(ranking_dict))
+                f.write('\n')
             st.session_state['ranking_id'] = ranking_dict['id']
-            st.session_state['interactions'] = []
+            st.session_state['latest_query'] = {
+                'lang': lang,
+                'query': query,
+                'results': results
+            }
             display_results(results)
             st.markdown(f'Retrieved in {retrieve_time:.4f} seconds with {device} backend')
     except CloudLoadingException:
@@ -177,6 +188,10 @@ def run_query(query, lang):
         
 # ----------------Options----------------
 def option_query(sample_dict):
+    if (st.session_state['app_state'] == 'WAIT'):
+        display_results(st.session_state['latest_query']['results'])
+        gc.collect()
+        return
     st.title("Search for a package")
     query = st.text_input('Enter query', help='Describe what functionality you are looking for', max_chars=2048)
     lang = st.selectbox(
@@ -219,10 +234,15 @@ es = CachedElasticsearch(
     basic_auth = (config.es_username, config.es_passwd),
     verify_certs=False,
 )
+if 'app_state' not in st.session_state.keys():
+    st.session_state['app_state'] = 'STANDBY'
+if 'usr_id' not in st.session_state.keys():
+    st.session_state['usr_id'] = str(uuid.uuid4())
+    
 # samples = get_sample_queries()
 sample_dict = {lang: get_sample_queries(lang) for lang in config.langs}
-st.session_state['usr_id'] = str(uuid.uuid4())
-if option == 'Query':
+
+if option == 'Query':   
     option_query(sample_dict)
 elif option == 'About':
     option_about()
