@@ -98,6 +98,9 @@ def get_interaction_dict(item_id, ranking_id):
 
 def callback_save_interaction(item_id):
     interaction_dict = get_interaction_dict(item_id, st.session_state['ranking_id'])
+    if item_id in st.session_state['upvoted']:
+        return
+    st.session_state['upvoted'].append(item_id)
     with open('magi_interactions.jsonl', 'a') as f:
         f.write(json.dumps(interaction_dict))
         f.write('\n')
@@ -145,10 +148,11 @@ def display_results(results):
     st.markdown('''<hr style="height:1.5px;border:none;color:#CCC;background-color:#CCC;" />''', unsafe_allow_html=True)
     for index, result in enumerate(results):
         col1, col2 = st.columns([1, 20], gap = 'medium')
+        upvote_text = '' if not result[6] in st.session_state['upvoted'] else '<font color="#f5675f">    Upvoted!</font>'
         with col1:
             st.button(label = '▲', key = f'upvote-{index}', on_click = callback_save_interaction, args = [result[6]])
         with col2:
-            st.markdown(f'[**{result[0]}**]({result[1]})')
+            st.markdown(f'[**{result[0]}**]({result[1]}){upvote_text}', unsafe_allow_html=True)
         st.markdown(f'⭐️  {result[2]} | {result[3]}')
         st.markdown('''<hr style="height:1.5px;border:none;color:#CCC;background-color:#CCC;" />''', unsafe_allow_html=True)
 
@@ -177,6 +181,7 @@ def run_query(query, lang):
                 'query': query,
                 'results': results
             }
+            st.session_state['upvoted'] = []
             display_results(results)
             st.markdown(f'Retrieved in {retrieve_time:.4f} seconds with {device} backend')
     except CloudLoadingException:
