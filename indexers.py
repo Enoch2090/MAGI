@@ -124,7 +124,7 @@ class MagiIndexer:
         for index in sorted_index:
             results.append(
                 tuple(
-                    self.get_repo(index, lang) + [similarity[index]]
+                    self.get_repo(index, lang) + [similarity[index], 'similarity', index]
                 )
             )
         end = time.time()

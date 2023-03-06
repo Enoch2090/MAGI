@@ -7,14 +7,22 @@ import gc
 import random
 import logging
 import requests
+import urllib3
+import uuid
 from tqdm import tqdm, trange
+from itertools import zip_longest, chain
 from magi_models import *
 from dataset import *
 from indexers import *
+from datetime import datetime
+from elasticsearch import Elasticsearch
+from elasticsearch.helpers import bulk
+
 from magi_configs import MagiProductionConfig
 logging.basicConfig()
 logger = logging.getLogger('MAGI_interface')
 logger.setLevel(logging.INFO)
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 st.set_page_config(
    page_title='MAGI',
@@ -43,8 +51,56 @@ def get_corpus(link):
                 chunk_n += 1
                 _tqdm.update(1)
 
+def interleave_rerank(src1: List[Tuple], src2: List[Tuple]) -> List[Tuple]:
+    # TODO: remove duplicates
+    results = []
+    repo_hist = []
+    for s in chain(*zip_longest(src1, src2, fillvalue=None)):
+        if s is None or s[0] in repo_hist:
+            continue
+        results.append(s)
+        repo_hist.append(s[0])
+    return results
+
+def get_ranking_dict(ranking_results):
+    return {
+          'id': str(uuid.uuid4()),
+          'timestamp': datetime.timestamp(datetime.now()),
+          'user': st.session_state['usr_id'],
+          'session': st.session_state['usr_id'],
+          'fields': [],
+          'items': [
+            {
+              'id': str(x[6]),
+              x[5]: float(x[4])
+            } for x in ranking_results
+          ],
+          'event': 'ranking'
+        } 
+
+def get_interaction_dict(item_id, ranking_id):
+    return {
+        'id': str(uuid.uuid4()),
+        'item': str(item_id),
+        'timestamp': datetime.timestamp(datetime.now()),
+        'ranking': ranking_id,
+        'user': st.session_state['usr_id'],
+        'session': st.session_state['usr_id'],
+        'type': 'click',
+        'fields': [],
+        'event': 'interaction'
+    }
+
+def callback_save_interaction(item_id):
+    interaction_dict = get_interaction_dict(item_id, st.session_state['ranking_id'])
+    with open('magi_interactions.jsonl', 'w+') as f:
+        f.write(json.dumps(interaction_dict))
+
 @st.experimental_singleton
 class CachedDataset(GitHubCorpusRawTextDataset): pass
+
+@st.experimental_singleton
+class CachedElasticsearch(Elasticsearch): pass
 
 @st.experimental_singleton
 class CachedIndexer: 
@@ -52,7 +108,7 @@ class CachedIndexer:
         self.indexer = MagiIndexer(_dataset, _model, embedding_file=config.embedding_file)
     def search(self, *args, **kwargs):
         return self.indexer.search(*args, **kwargs)
-    
+
 @st.experimental_memo
 def get_model():
     if config.device in ['cuda', 'cpu']:
@@ -76,23 +132,48 @@ def get_sample_queries(lang=None):
 def display_results(results):
     st.markdown('''<hr style="height:2px;border:none;color:#CCC;background-color:#CCC;" />''', unsafe_allow_html=True)
     for result in results:
-        st.markdown(f"🗂  [{result[0]}]({result[1]})")
-        st.markdown(f"⭐️  {result[2]} | {result[3]}")
+        col1, col2 = st.columns(2)
+        with col1:
+            st.markdown(f'🗂  [{result[0]}]({result[1]})')
+        with col2:
+            st.button(label='⬆︎', key=str(result[6]), on_click=callback_save_interaction, args=[result[6]])
+        st.markdown(f'⭐️  {result[2]} | {result[3]}')
         st.markdown('''<hr style="height:2px;border:none;color:#CCC;background-color:#CCC;" />''', unsafe_allow_html=True)
+        
 
 def run_query(query, lang):
-        try:
-            with st.spinner("Querying..."):
-                st.markdown(f'Results for "{query}" in `{lang}`')
-                results, retrieve_time = indexer.search(query, lang=lang, rank=10)
-                display_results(results)
-                st.markdown(f'Retrieved in {retrieve_time:.4f} seconds with {device} backend')
-        except CloudLoadingException:
-            st.markdown(f'Cloud model is currently loading, please retry after 30 seconds.')
-            my_bar = st.progress(0)
-            for percent_complete in range(33):
-                time.sleep(1)
-                my_bar.progress(percent_complete + 3)
+    lang_safe = lang.lower().replace('++', 'pp')
+    try:
+        with st.spinner("Querying..."):
+            st.markdown(f'Results for "{query}" in `{lang}`')
+            sim_results, retrieve_time = indexer.search(query, lang=lang, rank=10)
+            es_resp = es.search(
+                index=f'{lang_safe}-index',
+                body={
+                    'query': {
+                        'match' : {
+                            'readme': query
+                        }
+                    },            
+                }
+            )
+            es_results = [(x['_source']['name'], x['_source']['link'], x['_source']['stars'], x['_source']['description'], float(x['_score']), 'bm25', x['_id']) for x in es_resp.body['hits']['hits']]
+            results = interleave_rerank(sim_results, es_results)
+            ranking_dict = get_ranking_dict(results)
+            from pprint import pprint
+            pprint(ranking_dict)
+            with open('magi_interactions.jsonl', 'w+') as f:
+                f.write(json.dumps(ranking_dict))
+            st.session_state['ranking_id'] = ranking_dict['id']
+            st.session_state['interactions'] = []
+            display_results(results)
+            st.markdown(f'Retrieved in {retrieve_time:.4f} seconds with {device} backend')
+    except CloudLoadingException:
+        st.markdown(f'Cloud model is currently loading, please retry after 30 seconds.')
+        my_bar = st.progress(0)
+        for percent_complete in range(33):
+            time.sleep(1)
+            my_bar.progress(percent_complete + 3)
         
 # ----------------Options----------------
 def option_query(sample_dict):
@@ -132,9 +213,15 @@ datasets = [
 ]
 model = get_model()
 indexer = CachedIndexer(datasets, model)
+es = CachedElasticsearch(
+    config.es_url, 
+    ca_certs =  config.es_cert,
+    basic_auth = (config.es_username, config.es_passwd),
+    verify_certs=False,
+)
 # samples = get_sample_queries()
 sample_dict = {lang: get_sample_queries(lang) for lang in config.langs}
-
+st.session_state['usr_id'] = str(uuid.uuid4())
 if option == 'Query':
     option_query(sample_dict)
 elif option == 'About':
