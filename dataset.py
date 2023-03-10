@@ -115,12 +115,12 @@ class GitHubCorpusRawTextDataset(Dataset):
         if repo_index is None:
             repo_index = self.vec_to_repo[index]
         repo_data = self.raw_data[repo_index]
-        return [
-            repo_data['name'],
-            repo_data['link'],
-            repo_data['stars'],
-            repo_data['description']
-        ]
+        return {
+            'name': repo_data['name'],
+            'link': repo_data['link'],
+            'stars': repo_data['stars'],
+            'description': repo_data['description']
+        }
     
     def get_tags(self, index:int=None, repo_index:int=None):
         if repo_index is None:

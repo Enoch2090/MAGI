@@ -56,38 +56,90 @@ def get_corpus(link):
                 chunk_n += 1
                 _tqdm.update(1)
 
-def interleave_rerank(src1: List[Tuple], src2: List[Tuple]) -> List[Tuple]:
-    # TODO: remove duplicates
+def es_search(es, query: str, lang_safe: str):
+    es_resp = es.search(
+        index = f'{lang_safe}-index',
+        query = {
+            'match' : {
+                'readme': query
+            }
+        }
+    )
+    return [
+        {
+            'index': x['_id'],
+            'name': x['_source']['name'],
+            'link': x['_source']['link'],
+            'stars': x['_source']['stars'],
+            'description': x['_source']['description'],
+            'metric': 'bm25',
+            'value': float(x['_score'])
+        } for x in es_resp.body['hits']['hits']
+    ]
+
+def interleave_rerank(src1: List[dict], src2: List[dict], query:str = '', lang: str = '') -> List[dict]:
     results = []
     repo_hist = []
     for s in chain(*zip_longest(src1, src2, fillvalue=None)):
-        if s is None or s[0] in repo_hist:
+        if s is None:
             continue
+        if s['name'] in repo_hist:
+            results[repo_hist.index(s['name'])][s['metric']] = s['value']
+            continue
+        s[s['metric']] = s['value']
         results.append(s)
-        repo_hist.append(s[0])
+        repo_hist.append(s['name'])
     return results
 
-def get_ranking_dict(ranking_results):
+def metarank_rerank(src1: List[dict], src2: List[dict], query:str = '', lang: str = '') -> List[dict]:
+    merged_results = interleave_rerank(src1, src2)
+    inverse_dict = {x['index']: x for x in merged_results}
+    ranking_dict = get_ranking_dict(merged_results, query, lang)
+    metarank_raw_result = requests.post(f'{config.metarank_url}/rank/{config.metarank_model}', json = ranking_dict).json()['items']
+    # requests.post(f'{config.metarank_url}/feedback', json = ranking_dict)
+    results = []
+    for ranked_item in metarank_raw_result:
+        repo_item = inverse_dict[ranked_item['item']]
+        repo_item['ranked_score'] = ranked_item['score']
+        results.append(repo_item)
+    return results
+    
+
+def get_ranking_dict(ranking_results, query:str = '', lang: str = ''):
     return {
-          'id': str(uuid.uuid4()),
-          'timestamp': datetime.timestamp(datetime.now()),
-          'user': st.session_state['usr_id'],
-          'session': st.session_state['usr_id'],
-          'fields': [],
-          'items': [
-            {
-              'id': str(x[6]),
-              x[5]: float(x[4])
-            } for x in ranking_results
-          ],
-          'event': 'ranking'
+            'id': str(uuid.uuid4()),
+            'timestamp': datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'user': st.session_state['usr_id'],
+            'session': st.session_state['usr_id'],
+            'fields': [
+                {'name': 'query', 'value': query},
+                {'name': 'lang', 'value': lang}
+            ],
+            'items': [
+                {
+                    'id': str(x['index']),
+                    'fields': [
+                        {
+                            'name': 'stars',
+                            'value': x['stars']
+                        },
+                        *[
+                            {
+                                'name': metric,
+                                'value': x[metric]
+                            } for metric in ['bm25', 'similarity'] if metric in x.keys()
+                        ] 
+                    ]
+                } for x in ranking_results
+            ],
+            'event': 'ranking'
         } 
 
 def get_interaction_dict(item_id, ranking_id):
     return {
         'id': str(uuid.uuid4()),
         'item': str(item_id),
-        'timestamp': datetime.timestamp(datetime.now()),
+        'timestamp': datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ'),
         'ranking': ranking_id,
         'user': st.session_state['usr_id'],
         'session': st.session_state['usr_id'],
@@ -96,14 +148,18 @@ def get_interaction_dict(item_id, ranking_id):
         'event': 'interaction'
     }
 
-def callback_save_interaction(item_id):
+def callback_save_interaction(item_id, feedback = False):
     interaction_dict = get_interaction_dict(item_id, st.session_state['ranking_id'])
     if item_id in st.session_state['upvoted']:
         return
     st.session_state['upvoted'].append(item_id)
+    if feedback:
+        requests.post(f'{config.metarank_url}/feedback', json = interaction_dict)
+        return
     with open('magi_interactions.jsonl', 'a') as f:
         f.write(json.dumps(interaction_dict))
         f.write('\n')
+    
 
 @st.experimental_singleton
 class CachedDataset(GitHubCorpusRawTextDataset): pass
@@ -148,42 +204,38 @@ def display_results(results):
     st.markdown('''<hr style="height:1.5px;border:none;color:#CCC;background-color:#CCC;" />''', unsafe_allow_html=True)
     for index, result in enumerate(results):
         col1, col2 = st.columns([1, 20], gap = 'medium')
-        upvote_text = '' if not result[6] in st.session_state['upvoted'] else '<font color="#f5675f">    Upvoted!</font>'
+        upvote_text = '' if not result['index'] in st.session_state['upvoted'] else '<font color="#f5675f">    Upvoted!</font>'
         with col1:
-            st.button(label = '▲', key = f'upvote-{index}', on_click = callback_save_interaction, args = [result[6]])
+            st.button(label = '▲', key = f'upvote-{index}', on_click = callback_save_interaction, args = [result['index']])
         with col2:
-            st.markdown(f'[**{result[0]}**]({result[1]}){upvote_text}', unsafe_allow_html=True)
-        st.markdown(f'⭐️  {result[2]} | {result[3]}')
+            st.markdown(f"[**{result['name']}**]({result['link']}){upvote_text}", unsafe_allow_html=True)
+        st.markdown(f"⭐️  {result['stars']} | {result['description']}")
         st.markdown('''<hr style="height:1.5px;border:none;color:#CCC;background-color:#CCC;" />''', unsafe_allow_html=True)
 
 def run_query(query, lang):
     lang_safe = lang.lower().replace('++', 'pp')
     try:
-        with st.spinner("Querying..."):
+        with st.spinner("Running dense retrieval..."):
             sim_results, retrieve_time = indexer.search(query, lang=lang, rank=10)
-            es_resp = es.search(
-                index = f'{lang_safe}-index',
-                query = {
-                    'match' : {
-                        'readme': query
-                    }
-                }
-            )
-            es_results = [(x['_source']['name'], x['_source']['link'], x['_source']['stars'], x['_source']['description'], float(x['_score']), 'bm25', x['_id']) for x in es_resp.body['hits']['hits']]
-            results = interleave_rerank(sim_results, es_results)
-            ranking_dict = get_ranking_dict(results)
+        with st.spinner("Running sparse retrieval..."):
+            es_results = es_search(es, query, lang_safe)
+        with st.spinner("Generating final results..."):
+            # results = interleave_rerank(sim_results, es_results)
+            results = metarank_rerank(sim_results, es_results, query, lang)
+            ranking_dict = get_ranking_dict(results, query, lang)
+            print(ranking_dict)
             with open('magi_interactions.jsonl', 'a') as f:
                 f.write(json.dumps(ranking_dict))
                 f.write('\n')
-            st.session_state['ranking_id'] = ranking_dict['id']
-            st.session_state['latest_query'] = {
-                'lang': lang,
-                'query': query,
-                'results': results
-            }
-            st.session_state['upvoted'] = []
-            display_results(results)
-            st.markdown(f'Retrieved in {retrieve_time:.4f} seconds with {device} backend')
+        st.session_state['ranking_id'] = ranking_dict['id']
+        st.session_state['latest_query'] = {
+            'lang': lang,
+            'query': query,
+            'results': results
+        }
+        st.session_state['upvoted'] = []
+        display_results(results)
+        st.markdown(f'Retrieved in {retrieve_time:.4f} seconds with {device} backend')
     except CloudLoadingException:
         st.markdown(f'Cloud model is currently loading, please retry after 30 seconds.')
         my_bar = st.progress(0)
@@ -200,8 +252,9 @@ def option_query(sample_dict):
     st.title("Search for a package")
     query = st.text_input('Enter query', help='Describe what functionality you are looking for', max_chars=2048)
     lang = st.selectbox(
-        'Search in language...',
-        tuple(config.langs)
+        label = 'Search in language...',
+        options = tuple(config.langs),
+        index = st.session_state['last_lang']
     )
     col1, col2 = st.columns(2)
     with col1:
@@ -213,6 +266,7 @@ def option_query(sample_dict):
     elif lucky:
         sample = random.sample(sample_dict[lang], 1)[0]
         run_query(*sample)
+    st.session_state['last_lang'] = config.langs.index(lang)
     gc.collect()
     return
 
@@ -243,7 +297,8 @@ if 'app_state' not in st.session_state.keys():
     st.session_state['app_state'] = 'STANDBY'
 if 'usr_id' not in st.session_state.keys():
     st.session_state['usr_id'] = str(uuid.uuid4())
-    
+if 'last_lang' not in st.session_state.keys():
+    st.session_state['last_lang'] = 0
 # samples = get_sample_queries()
 sample_dict = {lang: get_sample_queries(lang) for lang in config.langs}
 
@@ -259,4 +314,58 @@ hide_menu_style = """
         #MainMenu {visibility: hidden;}
         </style>
         """
+        
+floating_button = """
+<style>
+
+#myBtn {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 30px;
+  z-index: 99;
+  font-size: 18px;
+  border: none;
+  outline: none;
+  background-color: red;
+  color: white;
+  cursor: pointer;
+  padding: 15px;
+  border-radius: 4px;
+}
+
+#myBtn:hover {
+  background-color: #555;
+}
+</style>
+
+<body>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<script>
+// Get the button
+let mybutton = document.getElementById("myBtn");
+
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    mybutton.style.display = "block";
+  } else {
+    mybutton.style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+"""
 st.markdown(hide_menu_style, unsafe_allow_html=True)
+st.markdown(floating_button, unsafe_allow_html=True)

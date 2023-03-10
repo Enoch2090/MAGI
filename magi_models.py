@@ -94,8 +94,8 @@ def train_model(model: nn.Module, config: SentenceBertTrainConfig) -> nn.Module:
 
 def entry( 
     train: bool = True,
-    corpus: list = None,
-    langs: list = ['Python', 'JavaScript', 'C++'],
+    corpus: list = ['python-latest', 'javascript-latest', 'cpp-latest', 'rust-latest', 'go-latest'],
+    langs: list = ['Python', 'JavaScript', 'C++', 'Rust', 'Go'],
     query_data: str = None,
     model_name: str = None,
     batch_size: int = 16,

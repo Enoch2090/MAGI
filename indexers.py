@@ -123,9 +123,12 @@ class MagiIndexer:
         results = []
         for index in sorted_index:
             results.append(
-                tuple(
-                    self.get_repo(index, lang) + [similarity[index], 'similarity', index]
-                )
+                {
+                    'index': str(index),
+                    **self.get_repo(index, lang),
+                    'metric': 'similarity',
+                    'value': float(similarity[index])
+                }
             )
         end = time.time()
         runtime = float(end - start)
@@ -151,15 +154,25 @@ class GitHubSearcher:
             if index >= rank:
                 break
             results.append(
-                (
-                    repo.full_name,
-                    repo.html_url,
-                    repo.stargazers_count,
-                    repo.description,
-                    0
-                )
+                {
+                    'index': -1,
+                    'name': repo.full_name,
+                    'link': repo.html_url,
+                    'stars': repo.stargazers_count,
+                    'description': repo.description,
+                    'metric': 'GitHub',
+                    'value': -1
+                }
             )
-        results += [('placeholder', '', '', 0)] * max(0, rank - len(results)) 
+        results += [{
+                    'index': -1,
+                    'name': 'Placeholder',
+                    'link': '#empty',
+                    'stars': 0,
+                    'description': 'Description',
+                    'metric': 'GitHub',
+                    'value': -1
+                }] * max(0, rank - len(results)) 
         return results, 0
 
 def get_testcases(
@@ -198,12 +211,12 @@ def compare_searches(
         for index, (query, standard_result) in enumerate(testcases[lang]):
             model_results, _ = magi_indexer.search(query, lang=lang, rank=rank)
             model_relevance = [
-                int(result[0] in standard_result) for result in model_results
+                int(result['name'] in standard_result) for result in model_results
             ]
             if get_baseline:
                 baseline_results, _ = baseline_searcher.search(query, lang=lang, rank=rank)
                 baseline_relevance = [
-                int(result[0] in standard_result) for result in baseline_results
+                int(result['name'] in standard_result) for result in baseline_results
             ]
             else:
                 baseline_relevance = [0] * len(model_relevance)
@@ -289,5 +302,5 @@ def inspect_model(
             finally:
                 model_results, _ = mg.search(query, lang=lang, rank=10)
                 print(f'-----------------------------------\n💡  Results for "{query}" in {lang}')
-                for (name, link, star, summary, score) in model_results:
+                for (_, name, link, star, summary, _, score) in model_results.values():
                     print(f'➡️  {name}\n\t✏️  {summary}\n\t⭐  {star}\n\t🏅  score={score:.4f}')

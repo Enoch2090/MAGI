@@ -55,6 +55,14 @@ Cache only:
 ```bash
 python3 magi_models.py --corpus "[\"python-latest\",\"javascript-latest\",\"cpp-latest\",\"rust-latest\",\"go-latest\"]" --langs [Python,JavaScript,\"C++\",Rust,Go] --train False --load_from Enoch2090/MAGI --benchmark False --inspection False --cache True --cache_loc ./datafile/MAGI_ghv10.pkl
 ```
+Or the defaults
+
+```bash
+python3 magi_models.py --train False --load_from Enoch2090/MAGI --benchmark False --inspection False --cache True --cache_loc ./datafile/MAGI_ghv10.pkl
+```
+
+
+
 This mode is used when training is complete. Use this mode to convert the database into embeddings and cache into a .pkl file.
 
 Streamlit interface:
