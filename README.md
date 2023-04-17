@@ -4,7 +4,9 @@
 
 ## What is MAGI?
 
-Read [**MAGI: MachineLearning Augmented Github Indexer**](https://www.enoch2090.me/article/MAGI-MachineLearning-Augmented-Github-Indexer) for more information.
+- Repo at [Enoch2090/MAGI: MAGI is an semantic searcher over GitHub.](https://github.com/Enoch2090/MAGI)
+- Blog post [MAGI: MachineLearning Augmented Github Indexer (enoch2090.me)](https://www.enoch2090.me/MAGI-MachineLearning-Augmented-Github-Indexer)
+- Dataset Tool: [基于 magi_dataset 构建 ElasticSearch 搜索 (enoch2090.me)](https://www.enoch2090.me/from-magi_dataset-to-elasticsearch)
 
 ## How to use it?
 
